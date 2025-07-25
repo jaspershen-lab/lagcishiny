@@ -17,5 +17,7 @@
   }
   
   # Optional message for laggedcorAPP
-  packageStartupMessage("Welcome to laggedcorAPP 🎉")
+  packageStartupMessage("Welcome to laggedcorAPP 🎉 \n",
+                        "You can use laggedcor web application via \n",
+                        "laggedcorAPP::laggedcor_shiny")
 }
