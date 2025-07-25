@@ -1,8 +1,12 @@
 Package: laggedcorAPP
 Title: Interactive Web Tools of laggedcor R package.
-Version: 0.0.0.9000
+Version: 0.99.0
 Authors@R: 
-    person("Shunpeng", "Bai", email = "bspchemy@gmail.com", role = c("aut", "cre"))
+       person(given = "Shunpeng",
+           family = "Bai",
+           role = "cre",
+           email = "bspchemy@gmail.com",
+           comment = c(ORCID = "0000-0002-6063-4537"))
 Description: Provides Shiny-based tools for visualizing and analyzing lagged correlations
     in time series data, with support for data uploads, interactive plots, and HTML reports.
 License: MIT + file LICENSE
