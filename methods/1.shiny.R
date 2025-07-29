@@ -1,7 +1,4 @@
-library(laggedcor)
-library(shiny)
-library(shinyjs)
-library(DT)
+
 
 
 bibtex_entry <- "@ARTICLE{Shen2019-xv,
@@ -9,26 +6,6 @@ bibtex_entry <- "@ARTICLE{Shen2019-xv,
                for untargeted metabolomics\",
   author    = \"Shen, Xiaotao and Wang, Ruohong and Xiong, Xin and Yin, Yandong
                and Cai, Yuping and Ma, Zaijun and Liu, Nan and Zhu, Zheng-Jiang\",
-  abstract  = \"Large-scale metabolite annotation is a challenge in liquid
-               chromatogram-mass spectrometry (LC-MS)-based untargeted
-               metabolomics. Here, we develop a metabolic reaction network
-               (MRN)-based recursive algorithm (MetDNA) that expands metabolite
-               annotations without the need for a comprehensive standard
-               spectral library. MetDNA is based on the rationale that seed
-               metabolites and their reaction-paired neighbors tend to share
-               structural similarities resulting in similar MS2 spectra. MetDNA
-               characterizes initial seed metabolites using a small library of
-               MS2 spectra, and utilizes their experimental MS2 spectra as
-               surrogate spectra to annotate their reaction-paired neighbor
-               metabolites, which subsequently serve as the basis for recursive
-               analysis. Using different LC-MS platforms, data acquisition
-               methods, and biological samples, we showcase the utility and
-               versatility of MetDNA and demonstrate that about 2000
-               metabolites can cumulatively be annotated from one experiment.
-               Our results demonstrate that MetDNA substantially expands
-               metabolite annotation, enabling quantitative assessment of
-               metabolic pathways and facilitating integrative multi-omics
-               analysis.\",
   journal   = \"Nat. Commun.\",
   publisher = \"Springer Science and Business Media LLC\",
   volume    =  10,
@@ -130,7 +107,11 @@ ui <- fluidPage(
       shiny::h4("Correlation Summary"),
       shiny::verbatimTextOutput("cor_summary"),
       shiny::h4("Plots"),
-      shiny::uiOutput("plots_ui"),
+      shiny::uiOutput("eva_lagged_cor_plot"),
+      shiny::uiOutput("max_scatter_plot"),
+      shiny::uiOutput("global_scatter_plot"),
+      shiny::uiOutput("max_alignment_plot"),
+      shiny::uiOutput("global_alignment_plot"),
       selectInput("report_fmt", "Select report format:",
                   choices = c("HTML", "PDF"),
                   selected = "HTML"),
@@ -158,6 +139,9 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
+  
+  options(shiny.error = function() traceback(3))
+  
   
   data_1 <- reactiveVal(NULL)
   data_2 <- reactiveVal(NULL)
@@ -234,8 +218,6 @@ server <- function(input, output, session) {
     pageLength = 5
   ))
   
-  
-  
   output$time_plot1 <- renderPlot({
     req(data_1())
     laggedcor::time_plot(
@@ -297,6 +279,30 @@ server <- function(input, output, session) {
   #点击Start analysis之后，开始计算
   result <- eventReactive(input$start, {
     
+    file_nrow_1 <- nrow(data_1())
+    file_nrow_2 <- nrow(data_2())
+    
+    if (file_nrow_1 <= file_nrow_2){
+      x <- data_1()[[2]]
+      time1 <- data_1()[[1]]
+      y <- data_2()[[2]]
+      time2 <- data_2()[[1]]
+    }else{
+      x <- data_2()[[2]]
+      time1 <- data_1()[[1]]
+      y <- data_1()[[2]]
+      time2 <- data_1()[[1]]
+    }
+    
+    laggedcor::calculate_lagged_correlation(x = x,
+                                            y = y,
+                                            time1 = time1, 
+                                            time2 = time2, 
+                                            time_tol = input$time_tol, 
+                                            step = input$step,
+                                            min_matched_sample = input$min_match,
+                                            align_method = input$align_method, 
+                                            cor_method = input$cor_method)
   })
   
   #计算结果之后跳转tab
@@ -304,6 +310,88 @@ server <- function(input, output, session) {
     updateTabsetPanel(session, "tabs", selected = "3.Results & Report")
   })
   
+  output$cor_summary <- renderPrint({
+    req(result())
+    list(
+      max_cor = laggedcor::extract_max_cor(result()),
+      global_cor = laggedcor::extract_global_cor(result()),
+      all_cor = laggedcor::extract_all_cor(result()),
+      all_cor_p = laggedcor::extract_all_cor_p(result()),
+      shift_time_numeric = laggedcor::extract_shift_time(result(), numeric = TRUE),
+      shift_time_no_numeric = laggedcor::extract_shift_time(result(), numeric = FALSE),
+      evaluated_lagged_cor = laggedcor::evaluate_lagged_cor(object = result, plot = FALSE)
+    )
+  })
+
+  output$eva_lagged_cor_plot <- renderPlot({
+    req(result())
+    evaluated_lagged_cor_plot <- laggedcor::evaluate_lagged_cor(result(),
+                                   plot = TRUE)
+    evaluated_lagged_cor_plot$plot
+  })
+  
+  observeEvent(result(), {
+    print(length(result()@x))
+    print(length(result()@y))
+    print(range(result()@time1))
+    print(range(result()@time2))
+  })
+
+
+  output$max_scatter_plot <- renderPlot({
+    req(result())
+    laggedcor::lagged_scatter_plot(result(),
+                                   x_name = "x",
+                                   y_name = "y",
+                                   which = "max",
+                                   hex = TRUE)
+  })
+
+  output$global_scatter_plot <- renderPlot({
+    req(result())
+    laggedcor::lagged_scatter_plot(result(),
+                                   x_name = "x",
+                                   y_name = "y",
+                                   which = "global",
+                                   hex = TRUE)
+  })
+
+  output$max_alignment_plot <- renderPlot({
+    req(result())
+    laggedcor::lagged_alignment_plot(result(),
+                                     x_color = "blue",
+                                     y_color = "red",
+                                     x_name = "x",
+                                     y_name = "y",
+                                     which = "max",
+                                     x_limit = c(1:1000),
+                                     non_matched_point_size = 0.1,
+                                     y_point_size = 1,
+                                     x_point_size = 3,
+                                     integrated = FALSE,
+                                     add_connect_line = FALSE,
+                                     add_point = FALSE,
+                                     time_gap = 4)
+  })
+
+  output$global_alignment_plot <- renderPlot({
+    req(result())
+    laggedcor::lagged_alignment_plot(result(),
+                                     x_color = "blue",
+                                     y_color = "red",
+                                     x_name = "x",
+                                     y_name = "y",
+                                     which = "global",
+                                     x_limit = c(1:1000),
+                                     non_matched_point_size = 0.1,
+                                     y_point_size = 1,
+                                     x_point_size = 3,
+                                     integrated = FALSE,
+                                     add_connect_line = FALSE,
+                                     add_point = FALSE,
+                                     time_gap = 4)
+  })
+
   output$bibtex_output <- renderPrint({
     cat(bibtex_entry)
   })

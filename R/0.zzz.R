@@ -2,11 +2,8 @@
 .onAttach <- function(libname, pkgname) {
   # Check if 'laggedcor' is installed
   if (requireNamespace("laggedcor", quietly = TRUE)) {
-    # Load the laggedcor package
-    library(laggedcor, character.only = TRUE)
-    
-    # Inform the user
-    packageStartupMessage("✔ 'laggedcor' is installed and loaded successfully.")
+    # Inform the user it's available
+    packageStartupMessage("✔ 'laggedcor' is installed and ready to use.")
   } else {
     # Warn the user to install from GitHub
     warning(
@@ -16,7 +13,6 @@
     )
   }
   
-  # Optional message for laggedcorAPP
   packageStartupMessage("Welcome to laggedcorAPP 🎉 \n",
                         "You can use laggedcor web application via \n",
                         "laggedcorAPP::laggedcor_shiny")
