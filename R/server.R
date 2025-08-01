@@ -39,6 +39,23 @@ laggedcor_server <- function(input,output,session){
     )
   })
   
+  output$preview_outputs_report <- renderUI({
+    req(start_preview())
+    
+    tagList(
+      div(h3("Data Preview"), style = "text-align:center;"),
+      fluidRow(
+        column(6, data_preview_ui("preview_file_1")),
+        column(6, data_preview_ui("preview_file_2"))
+      ),
+      div(h3("Time Plot"), style = "text-align:center;"),
+      fluidRow(
+        time_plot_ui("preview_file_1"),
+        time_plot_ui("preview_file_2")
+      )
+    )
+  })
+  
   
   
   observe({
@@ -87,7 +104,13 @@ laggedcor_server <- function(input,output,session){
       display_cor_summary_ui("cor_summary")
     })
     
+    output$cor_summary_report <- renderUI({
+      display_cor_summary_ui("cor_summary")
+    })
+    
   })
+  
+
   
   
   alignment_params <- alignment_plot_parameter_server("alignment_plot", result = cor_result)
@@ -97,6 +120,19 @@ laggedcor_server <- function(input,output,session){
     req(cor_result(), alignment_params(), scatter_params())
     
     output$plot_result_ui <- renderUI({
+      tagList(
+        div(h4("Max Alignment Plot"), style = "text-align:center;"),
+        plotOutput("max_align_plot"),
+        div(h4("Max Scatter Plot"), style = "text-align:center;"),
+        plotOutput("max_scatter_plot"),
+        div(h4("Global Alignment Plot"), style = "text-align:center;"),
+        plotOutput("global_align_plot"),
+        div(h4("Global Scatter Plot"), style = "text-align:center;"),
+        plotOutput("global_scatter_plot")
+      )
+    })
+    
+    output$plot_result_ui_report <- renderUI({
       tagList(
         div(h4("Max Alignment Plot"), style = "text-align:center;"),
         plotOutput("max_align_plot"),

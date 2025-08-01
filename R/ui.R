@@ -82,7 +82,9 @@ laggedcor_ui <- shinydashboard::dashboardPage(
                          downloadButton("download_report", "Download")
                   ),
                   column(8,
-                         p("Results will be shown here.")
+                         uiOutput("preview_outputs_report"),
+                         uiOutput("cor_summary_report"),
+                         uiOutput("plot_result_ui_report")
                   )
                 )
               ))
