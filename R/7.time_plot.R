@@ -1,3 +1,16 @@
+#' Time Plot Parameter Input UI
+#'
+#' Creates UI components to collect user-defined parameters for plotting time-series data.
+#'
+#' @param id The module ID for namespacing the UI elements.
+#'
+#' @return A `tagList` of UI elements including color picker, axis labels, and time settings.
+#'
+#' @importFrom shiny NS tagList h4 textInput numericInput checkboxInput
+#' @importFrom colourpicker colourInput
+#'
+#' @keywords internal
+#' @noRd
 time_plot_parameter_ui <- function(id){
   ns <- shiny::NS(id)
   
@@ -14,6 +27,23 @@ time_plot_parameter_ui <- function(id){
   )
 }
 
+
+#' Time Plot Parameter Server
+#'
+#' A Shiny server module that collects and returns user-defined plotting parameters
+#' for time-series visualization.
+#'
+#' @param id The module ID to namespace the server logic.
+#'
+#' @return A reactive list containing the plotting parameters:
+#' \code{color}, \code{y_axis_name_1}, \code{y_axis_name_2},
+#' \code{sun_rise_time}, \code{sun_set_time}, \code{time_gap},
+#' \code{add_point}, and \code{facet}.
+#'
+#' @importFrom shiny moduleServer reactive
+#'
+#' @keywords internal
+#' @noRd
 time_plot_parameter_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     reactive({
@@ -31,7 +61,18 @@ time_plot_parameter_server <- function(id) {
   })
 }
 
-
+#' Time Plot UI Module
+#'
+#' UI elements to display a dynamic plot title and a time-series plot.
+#'
+#' @param id The module ID for namespacing.
+#'
+#' @return A `tagList` containing a dynamic title (`uiOutput`) and a `plotOutput`.
+#'
+#' @importFrom shiny NS tagList uiOutput plotOutput
+#'
+#' @keywords internal
+#' @noRd
 time_plot_ui <- function(id) {
   ns <- NS(id)
   
@@ -42,7 +83,24 @@ time_plot_ui <- function(id) {
 }
 
 
-#laggedcor需要能够检查数据的结构！！！！！！！！！！！！
+#' Time Plot Server Module
+#'
+#' Generates a time-series plot using user-specified parameters and uploaded data.
+#'
+#' @param id The module ID for namespacing the server logic.
+#' @param data_reactive A reactive expression returning a data frame with a "time" column and one value column.
+#' @param file_name A reactive expression returning the name of the uploaded file (used in title).
+#' @param y_axis_param A string indicating which y-axis label to use (e.g., `"y_axis_name_1"`).
+#' @param plot_params A reactive expression returning a list of plotting parameters from `time_plot_parameter_server()`.
+#'
+#' @return No return value. This module registers plot rendering in the UI.
+#'
+#' @importFrom shiny moduleServer renderPlot renderUI req
+#'
+#' @seealso \code{\link{plot_time_series}}, \code{\link{laggedcor::time_plot}}
+#'
+#' @keywords internal
+#' @noRd
 time_plot_server <- function(id, data_reactive, file_name, y_axis_param, plot_params) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
@@ -76,6 +134,22 @@ time_plot_server <- function(id, data_reactive, file_name, y_axis_param, plot_pa
   })
 }
 
+#' Render Time-Series Plot with Custom Parameters
+#'
+#' A helper function to generate a time-series plot using the `laggedcor::time_plot()` function.
+#'
+#' @param df A data frame containing at least two columns: one named `time`, and another numeric value column.
+#' @param time_col A string specifying the name of the time column (typically "time").
+#' @param value_col A string specifying the name of the value column to be plotted.
+#' @param params A list of plot parameters returned from `time_plot_parameter_server()`.
+#' @param y_axis_param A string name of the y-axis label field to use (e.g., `"y_axis_name_1"`).
+#'
+#' @return A `ggplot` object representing the time-series plot.
+#'
+#' @seealso \code{\link[laggedcor]{time_plot}}
+#'
+#' @keywords internal
+#' @noRd
 plot_time_series <- function(df, time_col, value_col, params, y_axis_param) {
   laggedcor::time_plot(
     x = df[[value_col]],

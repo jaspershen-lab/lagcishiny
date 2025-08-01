@@ -1,3 +1,18 @@
+#' Export Plot UI Module
+#'
+#' Provides a button to open a modal dialog for exporting a ggplot figure
+#' to a downloadable file. The modal allows customization of file name,
+#' format, dimensions, and resolution.
+#'
+#' @param id Module ID for namespacing the UI elements.
+#' @param label The label for the export button (default is "Export Plot").
+#'
+#' @return A `tagList` with an action button and a hidden download link.
+#'
+#' @importFrom shiny NS tagList actionButton downloadLink
+#'
+#' @keywords internal
+#' @noRd
 export_plot_ui <- function(id, label = "Export Plot") {
   ns <- shiny::NS(id)
   
@@ -14,7 +29,30 @@ export_plot_ui <- function(id, label = "Export Plot") {
 }
 
 
-
+#' Export Plot Server Module
+#'
+#' Handles the server-side logic for exporting a `ggplot2` object
+#' to various image file formats based on user input from a modal dialog.
+#'
+#' @param id Module ID for namespacing.
+#' @param plot_expr A reactive expression that returns a `ggplot` object to be exported.
+#'
+#' @return This function is called for its side effects. It registers a `downloadHandler` internally.
+#'
+#' @details
+#' Supported formats include: `png`, `jpeg`, `jpg`, `tiff`, `bmp`, `svg`, `pdf`, and `eps`.
+#' Plot resolution (`dpi`) is only applicable to raster formats.
+#'
+#' Upon confirmation in the modal, the module triggers a programmatic download
+#' using `shinyjs::click()` on a hidden `downloadLink`.
+#'
+#' @importFrom shiny moduleServer showModal modalDialog textInput selectInput
+#' @importFrom shiny numericInput modalButton actionButton downloadHandler validate need
+#' @importFrom shinyjs click
+#' @importFrom ggplot2 ggsave
+#'
+#' @keywords internal
+#' @noRd
 export_plot_server <- function(id, plot_expr) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns

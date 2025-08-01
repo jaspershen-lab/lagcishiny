@@ -1,3 +1,16 @@
+
+#' Scatter Plot Parameter UI
+#'
+#' UI module to collect parameters for scatter plot generation.
+#'
+#' @param id Module ID for namespacing.
+#'
+#' @return A `tagList` containing UI elements for controlling the scatter plot.
+#'
+#' @importFrom shiny NS tagList h4 checkboxInput textInput
+#'
+#' @keywords internal
+#' @noRd
 scatter_plot_parameter_ui <- function(id) {
   ns <- shiny::NS(id)
   
@@ -9,6 +22,19 @@ scatter_plot_parameter_ui <- function(id) {
   )
 }
 
+#' Scatter Plot Parameter Server
+#'
+#' Server-side module to return user-defined parameters for scatter plots.
+#'
+#' @param id Module ID to namespace the server logic.
+#' @param result A reactive expression representing the lagged correlation result (required to ensure readiness).
+#'
+#' @return A reactive list containing \code{hex}, \code{x_name}, and \code{y_name}.
+#'
+#' @importFrom shiny moduleServer reactive req
+#'
+#' @keywords internal
+#' @noRd
 scatter_plot_parameter_server <- function(id,result) {
   moduleServer(id, function(input, output, session) {
     reactive({
@@ -22,6 +48,20 @@ scatter_plot_parameter_server <- function(id,result) {
   })
 }
 
+#' Alignment Plot Parameter UI
+#'
+#' UI module to collect user-defined parameters for alignment plots, including color, size,
+#' labels, integration settings, and x-axis limits.
+#'
+#' @param id Module ID for namespacing.
+#'
+#' @return A `tagList` of UI inputs for alignment plot customization.
+#'
+#' @importFrom shiny NS tagList h4 textInput numericInput checkboxInput uiOutput sliderInput
+#' @importFrom colourpicker colourInput
+#'
+#' @keywords internal
+#' @noRd
 alignment_plot_parameter_ui <- function(id) {
   ns <- shiny::NS(id)
   
@@ -43,7 +83,20 @@ alignment_plot_parameter_ui <- function(id) {
 }
 
 
-
+#' Alignment Plot Parameter Server
+#'
+#' Server logic for collecting user-defined alignment plot parameters and computing
+#' dynamic x-axis limits based on time indices from the lagged correlation result.
+#'
+#' @param id Module ID to namespace the server logic.
+#' @param result A reactive expression returning the lagged correlation result.
+#'
+#' @return A reactive list of plotting parameters including colors, sizes, labels, and limits.
+#'
+#' @importFrom shiny moduleServer reactive renderUI req sliderInput
+#'
+#' @keywords internal
+#' @noRd
 alignment_plot_parameter_server <- function(id, result) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
@@ -83,7 +136,21 @@ alignment_plot_parameter_server <- function(id, result) {
   })
 }
 
-
+#' Render Lagged Scatter Plot
+#'
+#' Generates a scatter plot based on lagged correlation result and user parameters.
+#'
+#' @param result A lagged correlation result object.
+#' @param plot_params A list containing plot configuration (from UI).
+#' @param which Whether to plot the "max" or "global" correlation.
+#'
+#' @return A `ggplot` object. Returns an empty plot if input is invalid.
+#'
+#' @importFrom laggedcor lagged_scatter_plot
+#' @importFrom ggplot2 ggplot theme_void
+#'
+#' @keywords internal
+#' @noRd
 scatter_plot <- function(result, plot_params, which = c("max", "global")) {
   which <- match.arg(which)
   
@@ -103,7 +170,21 @@ scatter_plot <- function(result, plot_params, which = c("max", "global")) {
 }
 
 
-
+#' Render Lagged Alignment Plot
+#'
+#' Generates an alignment plot based on the lagged correlation result and user-defined parameters.
+#'
+#' @param result A lagged correlation result object.
+#' @param params A list of alignment plot parameters from server.
+#' @param which Either `"max"` or `"global"` alignment.
+#'
+#' @return A `ggplot` object. Returns an empty plot if input is incomplete.
+#'
+#' @importFrom laggedcor lagged_alignment_plot
+#' @importFrom ggplot2 ggplot theme_void
+#'
+#' @keywords internal
+#' @noRd
 alignment_plot <- function(result, params, which = c("max", "global")) {
   which <- match.arg(which)
   

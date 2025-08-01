@@ -1,3 +1,41 @@
+#' LaggedCor Shiny UI
+#'
+#' Defines the user interface layout for the LaggedCor Shiny application using the `shinydashboard` framework.
+#' The UI is organized into five tabs: Home, Data Upload, Calculate, Result Plots, and Results & Report.
+#'
+#' @format A `shinydashboard::dashboardPage` object defining the full app layout.
+#'
+#' @section Tabs Overview:
+#' \describe{
+#'   \item{Home}{Displays a brief welcome message and app introduction.}
+#'   \item{Data Upload}{
+#'     Allows the user to upload two data files and configure time plot parameters.
+#'     Includes preview functionality with interactive plot export.
+#'   }
+#'   \item{Calculate}{
+#'     Enables configuration of lagged correlation parameters and triggers computation.
+#'     Outputs a structured correlation result summary.
+#'   }
+#'   \item{Result Plots}{
+#'     Provides controls for generating alignment and scatter plots (max/global),
+#'     and displays them with export buttons.
+#'   }
+#'   \item{Results & Report}{
+#'     Presents all analysis results for review, and enables full report generation
+#'     via \code{\link{report_download_ui}}.
+#'   }
+#' }
+#'
+#' @note This UI is designed to be paired with \code{\link{laggedcor_server}}.
+#'
+#' @seealso \code{\link{laggedcor_server}}, \code{\link{upload_file_ui}}, \code{\link{report_download_ui}}
+#'
+#' @importFrom shinydashboard dashboardPage dashboardHeader dashboardSidebar sidebarMenu menuItem dashboardBody tabItems tabItem
+#' @importFrom shiny fluidPage fluidRow column titlePanel actionButton uiOutput
+#' @importFrom shinyjs useShinyjs
+#'
+#' @keywords internal
+#' @noRd
 laggedcor_ui <- shinydashboard::dashboardPage(
   skin = "black",
   
@@ -22,8 +60,7 @@ laggedcor_ui <- shinydashboard::dashboardPage(
               fluidPage(
                 titlePanel("Introduction of laggedcor"),
                 fluidRow(
-                  column(12,
-                         p("Welcome to the LaggedCor App.")
+                  column(12
                   )
                 )
               )),

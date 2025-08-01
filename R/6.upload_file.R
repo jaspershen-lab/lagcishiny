@@ -1,3 +1,16 @@
+#' File Upload UI Module
+#'
+#' UI component that provides two file input selectors for uploading time-series data
+#' and a button to load example datasets.
+#'
+#' @param id The module ID to create a namespace for the UI elements.
+#'
+#' @return A Shiny `tagList` containing two `fileInput` components and an example data button.
+#'
+#' @importFrom shiny NS tagList fileInput actionButton icon
+#'
+#' @keywords internal
+#' @noRd
 upload_file_ui <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
@@ -11,7 +24,31 @@ upload_file_ui <- function(id) {
 }
 
 
-
+#' File Upload Server Module
+#'
+#' This server logic handles file uploads and example data loading. It validates file structure,
+#' reads the content of uploaded files, and makes the data available for downstream processing.
+#'
+#' @param id The module ID to namespace the server logic.
+#'
+#' @return A list with two named elements `file1` and `file2`, each containing:
+#' \describe{
+#'   \item{data}{A reactive expression returning the data frame.}
+#'   \item{name}{A reactive expression returning the file name (user-provided or default).}
+#' }
+#'
+#' @details
+#' - Uploaded files are validated using \code{\link{read_two_files}} and \code{\link{check_upload_file}}.
+#' - Supported file types include `.csv`, `.tsv`, `.xlsx`, `.xls`, and `.rda`.
+#' - Example datasets `heart_data` and `step_data` from the `laggedcor` package can be loaded using the example button.
+#' - Errors are reported using \code{\link{notify_error_shiny}}.
+#'
+#' @seealso \code{\link{upload_file_ui}}, \code{\link{read_uploaded_file}}, \code{\link{check_upload_file}}, \code{\link{notify_error_shiny}}
+#'
+#' @importFrom shiny moduleServer reactiveVal observeEvent reactive req
+#'
+#' @keywords internal
+#' @noRd
 upload_file_server <- function(id) {
   shiny::moduleServer(id, function(input, output, session) {
     ns <- session$ns

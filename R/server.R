@@ -1,3 +1,44 @@
+#' LaggedCor Shiny Server Module
+#'
+#' Main server logic for the LaggedCor Shiny application. This module orchestrates the
+#' entire lagged correlation analysis pipeline, including file upload, data preview,
+#' time plot rendering, parameter configuration, correlation computation, result summary,
+#' visualization, plot export, and report generation.
+#'
+#' @param input Shiny input object (automatically provided by Shiny).
+#' @param output Shiny output object (automatically provided by Shiny).
+#' @param session Shiny session object (automatically provided by Shiny).
+#'
+#' @return No return value. This function is called for its side effects.
+#'
+#' @details
+#' This server module performs the following steps:
+#' \enumerate{
+#'   \item Handles file upload or example data loading via `upload_file_server()`.
+#'   \item Enables preview of uploaded datasets and generates time plots with export capability.
+#'   \item Collects time plot parameters using `time_plot_parameter_server()`.
+#'   \item Computes lagged correlation using `calculate_laggedcor()` when user clicks "Run".
+#'   \item Displays result summary via `display_cor_summary_server()`.
+#'   \item Collects alignment and scatter plot parameters.
+#'   \item Generates and renders: evaluated lag plot, alignment plots (max/global), and scatter plots (max/global).
+#'   \item Allows export of each plot via `export_plot_server()`.
+#'   \item Generates comprehensive report using `report_download_server()`.
+#' }
+#'
+#' @note This module assumes a well-structured UI with matching IDs for:
+#' - `upload_file`, `preview_file_1`, `preview_file_2`
+#' - `export_time_plot_*`, `export_*_align`, `export_*_scatter`, `export_eva_plot`
+#' - `calculation`, `time_plot_parameters`, `cor_summary`, `report_download`
+#'
+#' @importFrom shiny reactiveVal observe observeEvent req renderPlot renderUI
+#' @importFrom shinyjs click runjs
+#' @importFrom ggplot2 ggplot theme_void
+#' @importFrom laggedcor evaluate_lagged_cor
+#'
+#' @seealso \code{\link{calculate_laggedcor}}, \code{\link{export_plot_server}}, \code{\link{report_download_server}}
+#'
+#' @keywords internal
+#' @noRd
 laggedcor_server <- function(input,output,session){
   
   uploaded_file_list <- upload_file_server("upload_file")
@@ -165,6 +206,18 @@ laggedcor_server <- function(input,output,session){
   alignment_params <- alignment_plot_parameter_server("alignment_plot", result = cor_result)
   scatter_params <- scatter_plot_parameter_server("scatter_plot", result = cor_result)
   
+  # 提前定义（全局）
+  max_align_plot_obj <- make_plot_obj(result = cor_result, params = alignment_params, plot_func = alignment_plot, which = "max")
+  global_align_plot_obj <- make_plot_obj(result = cor_result, params = alignment_params, plot_func = alignment_plot, which = "global")
+  max_scatter_plot_obj <- make_plot_obj(result = cor_result, params = scatter_params, plot_func = scatter_plot, which = "max")
+  global_scatter_plot_obj <- make_plot_obj(result = cor_result, params = scatter_params, plot_func = scatter_plot, which = "global")
+  
+  eva_plot_obj <- reactive({
+    req(cor_result())
+    laggedcor::evaluate_lagged_cor(object = cor_result(), plot = TRUE)$plot
+  })
+  
+  
   observeEvent(input$get_plot, {
     req(cor_result(), alignment_params(), scatter_params())
     
@@ -256,6 +309,17 @@ laggedcor_server <- function(input,output,session){
     
   })
   
-  report_download_server("report_download")
+  report_download_server(
+    "report_download",
+    data1 = data1,
+    data2 = data2,
+    plot_time = reactive({ list(time_plot_obj_1(), time_plot_obj_2()) }),
+    result = cor_result,
+    scatter_max = max_scatter_plot_obj,
+    scatter_global = global_scatter_plot_obj,
+    align_max = max_align_plot_obj,
+    align_global = global_align_plot_obj,
+    eva_plot = eva_plot_obj
+  )
   
 }

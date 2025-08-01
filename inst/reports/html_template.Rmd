@@ -1,5 +1,129 @@
 ---
-title: "HTML_template"
-output: html_document
+title: "`r params$title`"
+date: "`r format(params$time, '%Y-%m-%d %H:%M:%S')`"
+output: 
+  html_document:
+    toc: true
+    number_sections: true
+params:
+  title: "Default Title"
+  time: !r Sys.time()
+  data1: NULL
+  data2: NULL
+  result: NULL
+  plot_time1: NULL
+  plot_time2: NULL
+  scatter_max: NULL
+  scatter_global: NULL
+  align_max: NULL
+  align_global: NULL
+  eva_plot: NULL
 ---
 
+# Data Preview
+
+## Dataset 1
+
+```{r, echo=FALSE}
+head(params$data1, 5)
+```
+
+## Dataset 2
+
+```{r, echo=FALSE}
+head(params$data2, 5)
+```
+
+---
+
+# Time Plots
+
+## File 1 Time Plot
+
+```{r, echo=FALSE, fig.width=6, fig.height=4}
+params$plot_time1
+```
+
+## File 2 Time Plot
+
+```{r, echo=FALSE, fig.width=6, fig.height=4}
+params$plot_time2
+```
+
+---
+
+# Correlation Summary
+
+```{r, echo=FALSE}
+result <- params$result
+result
+```
+
+## Max Correlation
+
+```{r}
+laggedcor::extract_max_cor(result)
+```
+
+## Global Correlation
+
+```{r}
+laggedcor::extract_global_cor(result)
+```
+
+## Shift Times
+
+```{r}
+list(
+  numeric = laggedcor::extract_shift_time(result, numeric = TRUE),
+  annotated = laggedcor::extract_shift_time(result, numeric = FALSE)
+)
+```
+
+## Evaluation Score
+
+```{r}
+laggedcor::evaluate_lagged_cor(result, plot = FALSE)$score
+```
+
+---
+
+# Result Plots
+
+## Evaluated Lagged Correlation
+
+```{r, echo=FALSE, fig.width=6, fig.height=4}
+params$eva_plot
+```
+
+## Max Alignment Plot
+
+```{r, echo=FALSE, fig.width=6, fig.height=4}
+params$align_max
+```
+
+## Max Scatter Plot
+
+```{r, echo=FALSE, fig.width=6, fig.height=4}
+params$scatter_max
+```
+
+## Global Alignment Plot
+
+```{r, echo=FALSE, fig.width=6, fig.height=4}
+params$align_global
+```
+
+## Global Scatter Plot
+
+```{r, echo=FALSE, fig.width=6, fig.height=4}
+params$scatter_global
+```
+
+---
+
+# Session Info
+
+```{r}
+sessionInfo()
+```

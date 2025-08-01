@@ -1,3 +1,15 @@
+#' Correlation Calculation Parameter UI
+#'
+#' UI module for collecting user-defined parameters for lagged correlation analysis.
+#'
+#' @param id The module ID for namespacing the UI elements.
+#'
+#' @return A `tagList` containing numeric and select input controls for correlation settings.
+#'
+#' @importFrom shiny NS tagList numericInput selectInput
+#'
+#' @keywords internal
+#' @noRd
 calculation_parameter_ui <- function(id) {
   ns <- shiny::NS(id)
   
@@ -22,7 +34,26 @@ calculation_parameter_ui <- function(id) {
   )
 }
 
-
+#' Correlation Calculation Parameter Server
+#'
+#' Server-side module that collects user-defined numeric and categorical inputs
+#' required for lagged correlation calculation.
+#'
+#' @param id The module ID to namespace the server logic.
+#'
+#' @return A named list of reactive expressions for:
+#' \describe{
+#'   \item{time_tol}{Numeric input for time tolerance (hours).}
+#'   \item{step}{Numeric input for step size (hours).}
+#'   \item{min_match}{Minimum number of matched samples required.}
+#'   \item{cor_method}{Correlation method: "spearman" or "pearson".}
+#'   \item{align_method}{Interpolation method for alignment: "linear" or "constant".}
+#' }
+#'
+#' @importFrom shiny moduleServer reactive
+#'
+#' @keywords internal
+#' @noRd
 calculation_parameter_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     list(
@@ -35,6 +66,29 @@ calculation_parameter_server <- function(id) {
   })
 }
 
+#' Run Lagged Correlation Calculation
+#'
+#' This function runs lagged correlation analysis between two time-series data frames,
+#' using the parameters collected from a Shiny input module.
+#'
+#' @param df1 A data frame containing a "time" column and one value column.
+#' @param df2 A second data frame with the same structure as `df1`.
+#' @param params A list of reactive expressions returned by `calculation_parameter_server()`.
+#'
+#' @return A data frame or list as returned by \code{laggedcor::calculate_lagged_correlation()}.
+#' If the input data is invalid or empty, `NULL` is returned with an error notification.
+#'
+#' @details
+#' - The function auto-detects which dataset is shorter and aligns accordingly.
+#' - It performs checks to ensure structure validity and non-empty data before calculation.
+#'
+#' @importFrom laggedcor calculate_lagged_correlation
+#' @importFrom shiny req
+#'
+#' @seealso \code{\link{calculation_parameter_ui}}, \code{\link{notify_error_shiny}}
+#'
+#' @keywords internal
+#' @noRd
 calculate_laggedcor <- function(df1, df2, params) {
   stopifnot(is.data.frame(df1), is.data.frame(df2))
   stopifnot(ncol(df1) == 2, ncol(df2) == 2)

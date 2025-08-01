@@ -14,7 +14,23 @@ bibtex_entry <- "@ARTICLE{Shen2019-xv,
   language  = \"en\"
 }"
 
-
+#' Citation Display and Copy UI
+#'
+#' UI module for displaying a BibTeX citation and allowing users to copy it
+#' to the clipboard with a single click.
+#'
+#' @param id Module ID used to namespace the UI elements.
+#'
+#' @return A `tagList` with a "Copy BibTeX" button and formatted BibTeX output.
+#'
+#' @details This module injects a small JavaScript function using `navigator.clipboard`
+#' to support clipboard copying in modern browsers.
+#'
+#' @importFrom shinyjs useShinyjs runjs
+#' @importFrom shiny tags
+#'
+#' @keywords internal
+#' @noRd
 citation_ui <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
@@ -33,7 +49,21 @@ citation_ui <- function(id) {
   )
 }
 
-
+#' Citation Display and Copy Server
+#'
+#' Server module for rendering a BibTeX entry and enabling copy-to-clipboard
+#' functionality via JavaScript.
+#'
+#' @param id Module ID used to namespace the server logic.
+#' @param bibtex_entry A character string containing a BibTeX-formatted citation.
+#'
+#' @return No return value. This function registers outputs and handlers in the Shiny server.
+#'
+#' @importFrom shiny moduleServer renderPrint observeEvent
+#' @importFrom shinyjs runjs
+#'
+#' @keywords internal
+#' @noRd
 citation_server <- function(id, bibtex_entry) {
   shiny::moduleServer(id, function(input, output, session) {
     ns <- session$ns

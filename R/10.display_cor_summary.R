@@ -1,3 +1,15 @@
+#' Correlation Summary Display UI
+#'
+#' A UI module to display a textual summary of lagged correlation results.
+#'
+#' @param id The module ID used to namespace the UI elements.
+#'
+#' @return A `tagList` containing a section title and a `verbatimTextOutput` element.
+#'
+#' @importFrom shiny NS tagList h4 verbatimTextOutput
+#'
+#' @keywords internal
+#' @noRd
 display_cor_summary_ui <- function(id) {
   ns <- shiny::NS(id)
   tagList(
@@ -6,6 +18,32 @@ display_cor_summary_ui <- function(id) {
   )
 }
 
+#' Correlation Summary Display Server
+#'
+#' This server module renders a comprehensive summary of lagged correlation analysis results,
+#' including extracted metrics and evaluation scores.
+#'
+#' @param id The module ID used to namespace the server logic.
+#' @param result A reactive expression returning the lagged correlation result object (from `calculate_laggedcor()`).
+#'
+#' @return No return value. This function is called for its side effects—registering a print output in the UI.
+#'
+#' @details The summary includes:
+#' \itemize{
+#'   \item Raw correlation result object.
+#'   \item Maximum correlation and global correlation.
+#'   \item All correlation values and corresponding p-values.
+#'   \item Time shifts (numeric and string).
+#'   \item Evaluation score from \code{laggedcor::evaluate_lagged_cor()}.
+#' }
+#'
+#' @importFrom shiny moduleServer renderPrint req
+#' @importFrom laggedcor extract_max_cor extract_global_cor extract_all_cor extract_all_cor_p extract_shift_time evaluate_lagged_cor
+#'
+#' @seealso \code{\link{calculate_laggedcor}}, \code{\link{evaluate_lagged_cor}}
+#'
+#' @keywords internal
+#' @noRd
 display_cor_summary_server <- function(id, result) {
   shiny::moduleServer(id, function(input, output, session) {
     output$cor_summary <- renderPrint({
