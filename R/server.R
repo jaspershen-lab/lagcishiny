@@ -169,6 +169,10 @@ laggedcor_server <- function(input,output,session){
     
     output$plot_result_ui <- renderUI({
       tagList(
+        div(h4("Evaluated Lagged Correlation Plot"), style = "text-align:center;"),
+        plotOutput("eva_plot"),
+        export_plot_ui("export_eva_plot", label = "Export Lagged Correlation Plot"),
+        
         div(h4("Max Alignment Plot"), style = "text-align:center;"),
         plotOutput("max_align_plot"),
         export_plot_ui("export_max_align", label = "Export Max Align Plot"),
@@ -189,6 +193,10 @@ laggedcor_server <- function(input,output,session){
     
     output$plot_result_ui_report <- renderUI({
       tagList(
+        div(h4("Evaluated Lagged Correlation Plot"), style = "text-align:center;"),
+        plotOutput("eva_plot"),
+        export_plot_ui("export_eva_plot", label = "Export Lagged Correlation Plot"),
+        
         div(h4("Max Alignment Plot"), style = "text-align:center;"),
         plotOutput("max_align_plot"),
         export_plot_ui("export_max_align", label = "Export Max Align Plot"),
@@ -227,55 +235,26 @@ laggedcor_server <- function(input,output,session){
       scatter_plot(result = cor_result(), plot_params = scatter_params(), which = "global")
     })
     
+    # Evaluated Lagged Correlation Plot
+    eva_plot_obj <- reactive({
+      laggedcor::evaluate_lagged_cor(object = cor_result(), plot = TRUE)$plot
+    })
+    
     # Server bindings for export
     export_plot_server("export_max_align", plot_expr = max_align_plot_obj)
     export_plot_server("export_max_scatter", plot_expr = max_scatter_plot_obj)
     export_plot_server("export_global_align", plot_expr = global_align_plot_obj)
     export_plot_server("export_global_scatter", plot_expr = global_scatter_plot_obj)
-    
-
-    # output$max_align_plot <- renderPlot({
-    #   tryCatch({
-    #     alignment_plot(result = cor_result(), params = alignment_params(), which = "max")
-    #   }, error = function(e) {
-    #     notify_error_shiny(paste("Max Alignment Plot failed:", e$message))
-    #     ggplot2::ggplot() + ggplot2::theme_void()
-    #   })
-    # })
-    # 
-    # output$max_scatter_plot <- renderPlot({
-    #   tryCatch({
-    #     scatter_plot(result = cor_result(), plot_params = scatter_params(), which = "max")
-    #   }, error = function(e) {
-    #     notify_error_shiny(paste("Max Scatter Plot failed:", e$message))
-    #     ggplot2::ggplot() + ggplot2::theme_void()
-    #   })
-    # })
-    # 
-    # output$global_align_plot <- renderPlot({
-    #   tryCatch({
-    #     alignment_plot(result = cor_result(), params = alignment_params(), which = "global")
-    #   }, error = function(e) {
-    #     notify_error_shiny(paste("Global Alignment Plot failed:", e$message))
-    #     ggplot2::ggplot() + ggplot2::theme_void()
-    #   })
-    # })
-    # 
-    # output$global_scatter_plot <- renderPlot({
-    #   tryCatch({
-    #     scatter_plot(result = cor_result(), plot_params = scatter_params(), which = "global")
-    #   }, error = function(e) {
-    #     notify_error_shiny(paste("Global Scatter Plot failed:", e$message))
-    #     ggplot2::ggplot() + ggplot2::theme_void()
-    #   })
-    # })
+    export_plot_server("export_eva_plot", plot_expr = eva_plot_obj)
     
     output$max_align_plot <- renderPlot({ max_align_plot_obj() })
     output$max_scatter_plot <- renderPlot({ max_scatter_plot_obj() })
     output$global_align_plot <- renderPlot({ global_align_plot_obj() })
     output$global_scatter_plot <- renderPlot({ global_scatter_plot_obj() })
+    output$eva_plot <- renderPlot({ eva_plot_obj() })
     
   })
+  
 
   
 }
