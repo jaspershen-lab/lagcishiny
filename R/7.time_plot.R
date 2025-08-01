@@ -42,47 +42,52 @@ time_plot_ui <- function(id) {
 }
 
 
-
+#laggedcor需要能够检查数据的结构！！！！！！！！！！！！
 time_plot_server <- function(id, data_reactive, file_name, y_axis_param, plot_params) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
     
-    # 动态生成标题
     output$dynamic_title <- renderUI({
       req(file_name())
       h4(paste0(file_name(), " Time Plot"), style = "text-align:center;")
     })
     
-    # 渲染主图
     output$time_plot <- renderPlot({
-      req(data_reactive(), plot_params())
-      params <- plot_params()
-      
       df <- data_reactive()
+      params <- plot_params()
+      req(df, params)
       
       time_col <- "time"
-      value_cols <- setdiff(names(df), time_col)
+      value_col <- setdiff(names(df), time_col)
       
-      # 若没有唯一的值列 → 报错
-      if (length(value_cols) != 1) {
+      if (length(value_col) != 1) {
         notify_error_shiny("Data must contain exactly one column besides 'time'")
         return(NULL)
       }
       
-      value_col <- value_cols[[1]]
-      
-      laggedcor::time_plot(
-        x = df[[value_col]],
-        time = df[[time_col]],
-        color = params$color,
-        y_axis_name = params[[y_axis_param]],  # y 轴名称
-        sun_rise_time = params$sun_rise_time,
-        sun_set_time = params$sun_set_time,
-        time_gap = params$time_gap,
-        add_point = params$add_point,
-        facet = params$facet
+      plot_time_series(
+        df = df,
+        time_col = time_col,
+        value_col = value_col[[1]],
+        params = params,
+        y_axis_param = y_axis_param
       )
     })
   })
 }
+
+plot_time_series <- function(df, time_col, value_col, params, y_axis_param) {
+  laggedcor::time_plot(
+    x = df[[value_col]],
+    time = df[[time_col]],
+    color = params$color,
+    y_axis_name = params[[y_axis_param]],
+    sun_rise_time = params$sun_rise_time,
+    sun_set_time = params$sun_set_time,
+    time_gap = params$time_gap,
+    add_point = params$add_point,
+    facet = params$facet
+  )
+}
+
 

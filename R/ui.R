@@ -15,6 +15,7 @@ laggedcor_ui <- shinydashboard::dashboardPage(
   ),
   
   dashboardBody(
+    shinyjs::useShinyjs(),
     tabItems(
       ## Home tab ====
       tabItem(tabName = "home",

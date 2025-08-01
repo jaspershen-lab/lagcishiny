@@ -11,6 +11,7 @@ laggedcor_server <- function(input,output,session){
   start_preview <- reactiveVal(FALSE)
   
   observeEvent(input$preview, {
+    message("✅ Preview button clicked")
     start_preview(TRUE)
   })
   
@@ -34,7 +35,9 @@ laggedcor_server <- function(input,output,session){
       div(h3("Time Plot"), style = "text-align:center;"),
       fluidRow(
         time_plot_ui("preview_file_1"),
-        time_plot_ui("preview_file_2")
+        export_plot_ui("export_time_plot_1", label = "Export the Above Time Plot"),
+        time_plot_ui("preview_file_2"),
+        export_plot_ui("export_time_plot_2", label = "Export the Above Time Plot")
       )
     )
   })
@@ -51,11 +54,56 @@ laggedcor_server <- function(input,output,session){
       div(h3("Time Plot"), style = "text-align:center;"),
       fluidRow(
         time_plot_ui("preview_file_1"),
-        time_plot_ui("preview_file_2")
+        export_plot_ui("export_time_plot_1", label = "Export the Above Time Plot"),
+        time_plot_ui("preview_file_2"),
+        export_plot_ui("export_time_plot_2", label = "Export the Above Time Plot")
       )
     )
   })
   
+  time_plot_obj_1 <- reactive({
+    df <- data1()
+    params <- plot_params()
+    req(df, params)
+    
+    time_col <- "time"
+    value_col <- setdiff(names(df), time_col)
+    if (length(value_col) != 1) return(NULL)
+    
+    plot_time_series(
+      df = df,
+      time_col = time_col,
+      value_col = value_col[[1]],
+      params = params,
+      y_axis_param = "y_axis_name_1"
+    )
+  })
+  
+  time_plot_obj_2 <- reactive({
+    df <- data2()
+    params <- plot_params()
+    req(df, params)
+    
+    time_col <- "time"
+    value_col <- setdiff(names(df), time_col)
+    if (length(value_col) != 1) return(NULL)
+    
+    plot_time_series(
+      df = df,
+      time_col = time_col,
+      value_col = value_col[[1]],
+      params = params,
+      y_axis_param = "y_axis_name_2"
+    )
+  })
+  
+  
+  observe({
+    req(start_preview())
+    
+    export_plot_server("export_time_plot_1", plot_expr = time_plot_obj_1)
+    export_plot_server("export_time_plot_2", plot_expr = time_plot_obj_2)
+  })
   
   
   observe({
@@ -123,12 +171,19 @@ laggedcor_server <- function(input,output,session){
       tagList(
         div(h4("Max Alignment Plot"), style = "text-align:center;"),
         plotOutput("max_align_plot"),
+        export_plot_ui("export_max_align", label = "Export Max Align Plot"),
+        
         div(h4("Max Scatter Plot"), style = "text-align:center;"),
         plotOutput("max_scatter_plot"),
+        export_plot_ui("export_max_scatter", label = "Export Max Scatter Plot"),
+        
         div(h4("Global Alignment Plot"), style = "text-align:center;"),
         plotOutput("global_align_plot"),
+        export_plot_ui("export_global_align", label = "Export Global Align Plot"),
+        
         div(h4("Global Scatter Plot"), style = "text-align:center;"),
-        plotOutput("global_scatter_plot")
+        plotOutput("global_scatter_plot"),
+        export_plot_ui("export_global_scatter", label = "Export Global Scatter Plot")
       )
     })
     
@@ -136,50 +191,90 @@ laggedcor_server <- function(input,output,session){
       tagList(
         div(h4("Max Alignment Plot"), style = "text-align:center;"),
         plotOutput("max_align_plot"),
+        export_plot_ui("export_max_align", label = "Export Max Align Plot"),
+        
         div(h4("Max Scatter Plot"), style = "text-align:center;"),
         plotOutput("max_scatter_plot"),
+        export_plot_ui("export_max_scatter", label = "Export Max Scatter Plot"),
+        
         div(h4("Global Alignment Plot"), style = "text-align:center;"),
         plotOutput("global_align_plot"),
+        export_plot_ui("export_global_align", label = "Export Global Align Plot"),
+        
         div(h4("Global Scatter Plot"), style = "text-align:center;"),
-        plotOutput("global_scatter_plot")
+        plotOutput("global_scatter_plot"),
+        export_plot_ui("export_global_scatter", label = "Export Global Scatter Plot")
       )
     })
+    
+    # Max Alignment Plot
+    max_align_plot_obj <- reactive({
+      alignment_plot(result = cor_result(), params = alignment_params(), which = "max")
+    })
+    
+    # Max Scatter Plot
+    max_scatter_plot_obj <- reactive({
+      scatter_plot(result = cor_result(), plot_params = scatter_params(), which = "max")
+    })
+    
+    # Global Alignment Plot
+    global_align_plot_obj <- reactive({
+      alignment_plot(result = cor_result(), params = alignment_params(), which = "global")
+    })
+    
+    # Global Scatter Plot
+    global_scatter_plot_obj <- reactive({
+      scatter_plot(result = cor_result(), plot_params = scatter_params(), which = "global")
+    })
+    
+    # Server bindings for export
+    export_plot_server("export_max_align", plot_expr = max_align_plot_obj)
+    export_plot_server("export_max_scatter", plot_expr = max_scatter_plot_obj)
+    export_plot_server("export_global_align", plot_expr = global_align_plot_obj)
+    export_plot_server("export_global_scatter", plot_expr = global_scatter_plot_obj)
+    
 
-    output$max_align_plot <- renderPlot({
-      tryCatch({
-        alignment_plot(result = cor_result(), params = alignment_params(), which = "max")
-      }, error = function(e) {
-        notify_error_shiny(paste("Max Alignment Plot failed:", e$message))
-        ggplot2::ggplot() + ggplot2::theme_void()
-      })
-    })
+    # output$max_align_plot <- renderPlot({
+    #   tryCatch({
+    #     alignment_plot(result = cor_result(), params = alignment_params(), which = "max")
+    #   }, error = function(e) {
+    #     notify_error_shiny(paste("Max Alignment Plot failed:", e$message))
+    #     ggplot2::ggplot() + ggplot2::theme_void()
+    #   })
+    # })
+    # 
+    # output$max_scatter_plot <- renderPlot({
+    #   tryCatch({
+    #     scatter_plot(result = cor_result(), plot_params = scatter_params(), which = "max")
+    #   }, error = function(e) {
+    #     notify_error_shiny(paste("Max Scatter Plot failed:", e$message))
+    #     ggplot2::ggplot() + ggplot2::theme_void()
+    #   })
+    # })
+    # 
+    # output$global_align_plot <- renderPlot({
+    #   tryCatch({
+    #     alignment_plot(result = cor_result(), params = alignment_params(), which = "global")
+    #   }, error = function(e) {
+    #     notify_error_shiny(paste("Global Alignment Plot failed:", e$message))
+    #     ggplot2::ggplot() + ggplot2::theme_void()
+    #   })
+    # })
+    # 
+    # output$global_scatter_plot <- renderPlot({
+    #   tryCatch({
+    #     scatter_plot(result = cor_result(), plot_params = scatter_params(), which = "global")
+    #   }, error = function(e) {
+    #     notify_error_shiny(paste("Global Scatter Plot failed:", e$message))
+    #     ggplot2::ggplot() + ggplot2::theme_void()
+    #   })
+    # })
     
-    output$max_scatter_plot <- renderPlot({
-      tryCatch({
-        scatter_plot(result = cor_result(), plot_params = scatter_params(), which = "max")
-      }, error = function(e) {
-        notify_error_shiny(paste("Max Scatter Plot failed:", e$message))
-        ggplot2::ggplot() + ggplot2::theme_void()
-      })
-    })
+    output$max_align_plot <- renderPlot({ max_align_plot_obj() })
+    output$max_scatter_plot <- renderPlot({ max_scatter_plot_obj() })
+    output$global_align_plot <- renderPlot({ global_align_plot_obj() })
+    output$global_scatter_plot <- renderPlot({ global_scatter_plot_obj() })
     
-    output$global_align_plot <- renderPlot({
-      tryCatch({
-        alignment_plot(result = cor_result(), params = alignment_params(), which = "global")
-      }, error = function(e) {
-        notify_error_shiny(paste("Global Alignment Plot failed:", e$message))
-        ggplot2::ggplot() + ggplot2::theme_void()
-      })
-    })
-    
-    output$global_scatter_plot <- renderPlot({
-      tryCatch({
-        scatter_plot(result = cor_result(), plot_params = scatter_params(), which = "global")
-      }, error = function(e) {
-        notify_error_shiny(paste("Global Scatter Plot failed:", e$message))
-        ggplot2::ggplot() + ggplot2::theme_void()
-      })
-    })
   })
 
   

@@ -3,9 +3,16 @@ export_plot_ui <- function(id, label = "Export Plot") {
   
   tagList(
     actionButton(ns("open_export_modal"), label),
-    downloadButton(ns("download_plot"), "Download", style = "display:none;")
+
+    downloadLink(
+      ns("download_plot"),
+      label = NULL,
+      style = "position:absolute; left:-9999px;"
+    )
+    
   )
 }
+
 
 
 export_plot_server <- function(id, plot_expr) {
@@ -20,7 +27,7 @@ export_plot_server <- function(id, plot_expr) {
       dpi = NULL
     )
     
-    # 弹出导出设置窗口
+    # 弹出设置窗口
     observeEvent(input$open_export_modal, {
       showModal(modalDialog(
         title = "Export Plot",
@@ -40,7 +47,7 @@ export_plot_server <- function(id, plot_expr) {
       ))
     })
     
-    # 保存设置，触发下载
+    # 保存设置并触发下载
     observeEvent(input$confirm_export, {
       req(input$file_name, input$format, input$width, input$height, input$dpi)
       export_settings$filename <- input$file_name
@@ -48,20 +55,29 @@ export_plot_server <- function(id, plot_expr) {
       export_settings$width <- input$width
       export_settings$height <- input$height
       export_settings$dpi <- input$dpi
+      
       removeModal()
-      shinyjs::click(ns("download_plot"))
+      
+      session$onFlushed(function() {
+        shinyjs::click(ns("download_plot"))
+      }, once = TRUE)
     })
     
-    # 下载 handler
+    # 绑定下载行为
     output$download_plot <- downloadHandler(
       filename = function() {
+        validate(need(!is.null(export_settings$filename), "Filename is missing"))
         paste0(export_settings$filename, ".", export_settings$format)
       },
       content = function(file) {
-        req(plot_expr())
+        message("✅ downloadHandler triggered: ", file)
+        
         plot_obj <- plot_expr()
         
-        # 使用 ggplot2::ggsave 进行保存
+        message("✅ export file path: ", file)
+        
+        validate(need(!is.null(plot_obj), "❌ Export failed: Plot is NULL"))
+        
         ggsave(
           filename = file,
           plot = plot_obj,
