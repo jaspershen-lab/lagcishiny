@@ -12,6 +12,7 @@ display_cor_summary_server <- function(id, result) {
       req(result())
       
       list(
+        summary = result(),
         max_cor = laggedcor::extract_max_cor(result()),
         global_cor = laggedcor::extract_global_cor(result()),
         all_cor = laggedcor::extract_all_cor(result()),

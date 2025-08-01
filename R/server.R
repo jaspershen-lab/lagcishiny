@@ -153,6 +153,7 @@ laggedcor_server <- function(input,output,session){
     })
     
     output$cor_summary_report <- renderUI({
+      
       display_cor_summary_ui("cor_summary")
     })
     
@@ -255,6 +256,6 @@ laggedcor_server <- function(input,output,session){
     
   })
   
-
+  report_download_server("report_download")
   
 }

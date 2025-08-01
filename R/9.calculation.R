@@ -30,8 +30,7 @@ calculation_parameter_server <- function(id) {
       step = reactive(input$step),
       min_match = reactive(input$min_match),
       cor_method = reactive(input$cor_method),
-      align_method = reactive(input$align_method),
-      start = reactive(input$start)
+      align_method = reactive(input$align_method)
     )
   })
 }

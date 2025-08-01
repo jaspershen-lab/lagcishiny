@@ -8,7 +8,7 @@ Authors@R:
            email = "bspchemy@gmail.com",
            comment = c(ORCID = "0000-0002-6063-4537"))
 Description: Provides Shiny-based tools for visualizing and analyzing lagged correlations
-    in time series data, with support for data uploads, interactive plots, and HTML reports.
+    in time series data, with support for data uploads, plots, and several formats reports.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -17,5 +17,6 @@ Imports:
   laggedcor
 Remotes:
   jaspershen-lab/laggedcor
-
-
+Depends: 
+    R (>= 3.5)
+LazyData: true

@@ -80,7 +80,7 @@ laggedcor_ui <- shinydashboard::dashboardPage(
                 titlePanel("Report"),
                 fluidRow(
                   column(4,
-                         downloadButton("download_report", "Download")
+                         report_download_ui("report_download")
                   ),
                   column(8,
                          uiOutput("preview_outputs_report"),
