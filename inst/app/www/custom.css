@@ -1,0 +1,53 @@
+/* 页面与视口背景统一 */
+html, body {
+  background-color: #ecf0f4;
+  margin: 0;
+  height: 100%;
+}
+
+/* wrapper 填满整个视口，避免底部空白 */
+.wrapper {
+  min-height: 100vh;
+  padding-bottom: 80px;
+  box-sizing: border-box;
+}
+
+/* 固定底部 Footer 样式 */
+.app-footer {
+  background-color: #ecf0f4;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  padding: 10px;
+  height: 80px;
+  position: fixed;
+  bottom: 0;
+  left: 230px; /* 与 dashboardSidebar 宽度一致 */
+  right: 0;
+  z-index: 100;
+  border-top: 1px solid #ccc;
+}
+
+
+.footer-logo {
+  height: 50px;
+  margin-right: 15px;
+}
+
+.footer-content {
+  text-align: left;
+}
+
+.footer-link {
+  text-align: left;
+  margin-left: 10px;
+}
+
+.footer-icon {
+  color: #222d32;
+}
+
+.footer-logo-right {
+  height: 50px;
+  margin-left: 15px;
+}

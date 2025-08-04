@@ -33,6 +33,7 @@
 #' @importFrom shinydashboard dashboardPage dashboardHeader dashboardSidebar sidebarMenu menuItem dashboardBody tabItems tabItem
 #' @importFrom shiny fluidPage fluidRow column titlePanel actionButton uiOutput
 #' @importFrom shinyjs useShinyjs
+#' @importFrom shiny HTML
 #'
 #' @keywords internal
 #' @noRd
@@ -54,6 +55,12 @@ laggedcor_ui <- shinydashboard::dashboardPage(
   
   dashboardBody(
     shinyjs::useShinyjs(),
+    
+    tags$head(
+      tags$link(rel = "stylesheet", type = "text/css", href = "/www/custom.css")
+    ),
+    
+    
     tabItems(
       ## Home tab ====
       tabItem(tabName = "home",
@@ -126,6 +133,46 @@ laggedcor_ui <- shinydashboard::dashboardPage(
                   )
                 )
               ))
+    ),
+    ### footer ====
+    tags$footer(
+      div(
+        class = "app-footer",
+        tags$img(
+          src = "/www/shen_lab_logo.png",
+          class = "footer-logo"
+        ),
+        div(
+          class = "footer-content",
+          HTML("The Shen Lab at Nanyang Technological University Singapore"),
+          HTML("<br>"),
+          tags$a(
+            href = "http://www.shen-lab.org",
+            target = "_blank",
+            class = "footer-link",
+            tags$i(class = "fa fa-house footer-icon"),
+            " Shen Lab"
+          ),
+          tags$a(
+            href = "https://www.shen-lab.org/#contact",
+            target = "_blank",
+            class = "footer-link",
+            tags$i(class = "fa fa-envelope footer-icon"),
+            " Email"
+          ),
+          tags$a(
+            href = "https://github.com/jaspershen-lab/laggedcor",
+            target = "_blank",
+            class = "footer-link",
+            tags$i(class = "fa fa-github footer-icon"),
+            " GitHub"
+          )
+        ),
+        tags$img(
+          src = "/www/laggedcor-logo.png",
+          class = "footer-logo-right"
+        )
+      )
     )
   )
 )

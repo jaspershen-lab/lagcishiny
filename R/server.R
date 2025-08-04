@@ -41,6 +41,8 @@
 #' @noRd
 laggedcor_server <- function(input,output,session){
   
+  shiny::addResourcePath("www", system.file("app/www", package = "laggedcorAPP"))
+  
   uploaded_file_list <- upload_file_server("upload_file")
   
   data1 <- uploaded_file_list$file1$data
