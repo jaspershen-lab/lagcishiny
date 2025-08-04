@@ -1,7 +1,7 @@
-intro_cleaned_content <- grep("<(/?(html|head|body))>", 
-                              readLines(system.file("app/www/introduction.html", 
-                                                    package = "laggedcorAPP")),
-                              invert = TRUE, value = TRUE)
+# intro_cleaned_content <- grep("<(/?(html|head|body))>", 
+#                               readLines(system.file("app/www/introduction.html", 
+#                                                     package = "laggedcorAPP")),
+#                               invert = TRUE, value = TRUE)
 
 #' LaggedCor Shiny UI
 #'
@@ -73,7 +73,16 @@ laggedcor_ui <- shinydashboard::dashboardPage(
                 titlePanel("Introduction of laggedcor"),
                 fluidRow(
                   column(12,
-                         shiny::HTML(intro_cleaned_content),
+                         # shiny::HTML(intro_cleaned_content),
+                         # shiny::includeHTML(system.file("app/www/introduction.html",
+                         #                                package = "laggedcorAPP")),
+                         tags$iframe(
+                           src = "www/introduction.html",
+                           width = "100%",
+                           height = "600px",
+                           frameborder = 0,
+                           style = "border: none;"
+                         ),
                          citation_ui("cite")
                   )
                 )
