@@ -43,6 +43,15 @@ laggedcor_server <- function(input,output,session){
   
   shiny::addResourcePath("www", system.file("app/www", package = "laggedcorAPP"))
   
+  # output$introduction_output <- renderUI({
+  #   html_lines <- readLines("/app/www/introduction.html", warn = FALSE, encoding = "UTF-8")
+  #   html_clean <- grep("<(/?(html|head|body))>", html_lines, invert = TRUE, value = TRUE)
+  #   HTML(paste(html_clean, collapse = "\n"))
+  # })
+  
+  
+  citation_server("cite",bibtex_entry)
+  
   uploaded_file_list <- upload_file_server("upload_file")
   
   data1 <- uploaded_file_list$file1$data

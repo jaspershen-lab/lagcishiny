@@ -34,7 +34,7 @@ bibtex_entry <- "@ARTICLE{Shen2019-xv,
 citation_ui <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
-    shiny::useShinyjs(),
+    shinyjs::useShinyjs(),
     shiny::tags$script(shiny::HTML(sprintf("
       function copyBibtex_%s() {
         var text = document.getElementById('%s').innerText;

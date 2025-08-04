@@ -1,3 +1,8 @@
+intro_cleaned_content <- grep("<(/?(html|head|body))>", 
+                              readLines(system.file("app/www/introduction.html", 
+                                                    package = "laggedcorAPP")),
+                              invert = TRUE, value = TRUE)
+
 #' LaggedCor Shiny UI
 #'
 #' Defines the user interface layout for the LaggedCor Shiny application using the `shinydashboard` framework.
@@ -67,7 +72,9 @@ laggedcor_ui <- shinydashboard::dashboardPage(
               fluidPage(
                 titlePanel("Introduction of laggedcor"),
                 fluidRow(
-                  column(12
+                  column(12,
+                         shiny::HTML(intro_cleaned_content),
+                         citation_ui("cite")
                   )
                 )
               )),
