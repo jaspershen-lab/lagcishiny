@@ -31,23 +31,54 @@ bibtex_entry <- "@ARTICLE{Shen2019-xv,
 #'
 #' @keywords internal
 #' @noRd
+# citation_ui <- function(id) {
+#   ns <- shiny::NS(id)
+#   shiny::tagList(
+#     shinyjs::useShinyjs(),
+#     shiny::tags$script(shiny::HTML(sprintf("
+#       function copyBibtex_%s() {
+#         var text = document.getElementById('%s').innerText;
+#         navigator.clipboard.writeText(text).then(function() {
+#           alert('Copied!');
+#         });
+#       }
+#     ", id, paste0(id, "-bibtex_output")))),
+#     
+#     shiny::actionButton(ns("copy_btn"), "Copy BibTeX"),
+#     shiny::verbatimTextOutput(ns("bibtex_output"))
+#   )
+# }
+
 citation_ui <- function(id) {
-  ns <- shiny::NS(id)
-  shiny::tagList(
-    shinyjs::useShinyjs(),
-    shiny::tags$script(shiny::HTML(sprintf("
-      function copyBibtex_%s() {
-        var text = document.getElementById('%s').innerText;
-        navigator.clipboard.writeText(text).then(function() {
-          alert('Copied!');
-        });
-      }
-    ", id, paste0(id, "-bibtex_output")))),
-    
-    shiny::actionButton(ns("copy_btn"), "Copy BibTeX"),
-    shiny::verbatimTextOutput(ns("bibtex_output"))
+  ns <- NS(id)
+  
+  tagList(
+    tags$head(
+      tags$script(HTML(sprintf(
+        "
+        function copyBibtex_%s() {
+          var copyText = document.getElementById('%s');
+          copyText.select();
+          document.execCommand('copy');
+          alert('BibTeX copied to clipboard!');
+        }
+        ",
+        id, ns("bibtex_text")
+      )))
+    ),
+    tags$textarea(
+      id = ns("bibtex_text"),
+      class = "form-control",
+      rows = 10,
+      style = "width: 100%%;",
+      readonly = NA,  # 让它能被 select()
+      bibtex_entry
+    ),
+    tags$br(),
+    actionButton(ns("copy_btn"), "Copy BibTeX", onclick = sprintf("copyBibtex_%s()", id))
   )
 }
+
 
 #' Citation Display and Copy Server
 #'
@@ -64,16 +95,23 @@ citation_ui <- function(id) {
 #'
 #' @keywords internal
 #' @noRd
-citation_server <- function(id, bibtex_entry) {
-  shiny::moduleServer(id, function(input, output, session) {
-    ns <- session$ns
-    
-    output$bibtex_output <- shiny::renderPrint({
-      cat(bibtex_entry)
-    })
-    
-    shiny::observeEvent(input$copy_btn, {
-      shinyjs::runjs(sprintf("copyBibtex_%s();", id))
-    })
+# citation_server <- function(id, bibtex_entry) {
+#   shiny::moduleServer(id, function(input, output, session) {
+#     ns <- session$ns
+#     
+#     output$bibtex_output <- shiny::renderPrint({
+#       cat(bibtex_entry)
+#     })
+#     
+#     shiny::observeEvent(input$copy_btn, {
+#       shinyjs::runjs(sprintf("copyBibtex_%s();", id))
+#     })
+#   })
+# }
+
+citation_server <- function(id) {
+  moduleServer(id, function(input, output, session) {
+    # no server logic needed
   })
 }
+

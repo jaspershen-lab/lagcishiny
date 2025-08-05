@@ -50,7 +50,8 @@ laggedcor_server <- function(input,output,session){
   # })
   
   
-  citation_server("cite",bibtex_entry)
+  # citation_server("cite",bibtex_entry)
+  citation_server("cite")
   
   uploaded_file_list <- upload_file_server("upload_file")
   

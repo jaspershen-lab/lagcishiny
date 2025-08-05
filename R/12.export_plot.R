@@ -19,11 +19,21 @@ export_plot_ui <- function(id, label = "Export Plot") {
   tagList(
     actionButton(ns("open_export_modal"), label),
 
+    # downloadLink(
+    #   ns("download_plot"),
+    #   label = NULL,
+    #   style = "position:absolute; left:-9999px;"
+    # )
+    
+    # downloadLink(ns("download_plot"), label = " ")
+    
     downloadLink(
       ns("download_plot"),
-      label = NULL,
-      style = "position:absolute; left:-9999px;"
+      label = " ",  
+      style = "position:absolute; left:-9999px;"  
     )
+    
+    
     
   )
 }
@@ -111,6 +121,14 @@ export_plot_server <- function(id, plot_expr) {
         message("✅ downloadHandler triggered: ", file)
         
         plot_obj <- plot_expr()
+        
+        print(class(plot_obj))
+        print(export_settings$format)
+        
+        if (inherits(plot_obj, "gg") == FALSE) {
+          message("❌ plot_obj is not a ggplot object.")
+        }
+        
         
         message("✅ export file path: ", file)
         
