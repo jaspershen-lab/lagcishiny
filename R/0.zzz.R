@@ -15,5 +15,7 @@
   
   packageStartupMessage("Welcome to laggedcorAPP 🎉 \n",
                         "You can use laggedcor web application via \n",
-                        "laggedcorAPP::laggedcor_shiny()")
+                        "laggedcorAPP::laggedcor_shiny() \n",
+                        "If you want to export PDF report, please run \n",
+                        "tinytex::install_tinytex()")
 }

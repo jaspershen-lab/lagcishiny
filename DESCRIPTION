@@ -29,6 +29,7 @@ Imports:
     shinydashboard,
     shinyjs,
     stats,
+    tinytex,
     tools,
     utils
 Remotes:
