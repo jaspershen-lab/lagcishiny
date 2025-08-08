@@ -35,7 +35,7 @@
 #'
 #' @seealso \code{\link{laggedcor_server}}, \code{\link{upload_file_ui}}, \code{\link{report_download_ui}}
 #'
-#' @importFrom shinydashboard dashboardPage dashboardHeader dashboardSidebar sidebarMenu menuItem dashboardBody tabItems tabItem
+#' @import shinydashboard
 #' @importFrom shiny fluidPage fluidRow column titlePanel actionButton uiOutput
 #' @importFrom shinyjs useShinyjs
 #' @importFrom shiny HTML
