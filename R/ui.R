@@ -48,17 +48,17 @@ laggedcor_ui <- shinydashboard::dashboardPage(
   shinydashboard::dashboardHeader(title = "laggedcor"),
   
   shinydashboard::dashboardSidebar(
-    sidebarMenu(
+    shinydashboard::sidebarMenu(
       id = "tabs",
-      menuItem(text = "Home", tabName = "home", icon = icon("info-circle")),
-      menuItem(text = "Data Upload", tabName = "upload_data", icon = icon("upload")),
-      menuItem(text = "Calculate", tabName = "calculate", icon = icon("desktop")),
-      menuItem(text = "Result Plots", tabName = "result_plot", icon = icon("images")),
-      menuItem(text = "Results & Report", tabName = "report", icon = icon("clipboard-list"))
+      shinydashboard::menuItem(text = "Home", tabName = "home", icon = icon("info-circle")),
+      shinydashboard::menuItem(text = "Data Upload", tabName = "upload_data", icon = icon("upload")),
+      shinydashboard::menuItem(text = "Calculate", tabName = "calculate", icon = icon("desktop")),
+      shinydashboard::menuItem(text = "Result Plots", tabName = "result_plot", icon = icon("images")),
+      shinydashboard::menuItem(text = "Results & Report", tabName = "report", icon = icon("clipboard-list"))
     )
   ),
   
-  dashboardBody(
+  shinydashboard::dashboardBody(
     shinyjs::useShinyjs(),
     
     tags$head(
@@ -66,9 +66,9 @@ laggedcor_ui <- shinydashboard::dashboardPage(
     ),
     
     
-    tabItems(
+    shinydashboard::tabItems(
       ## Home tab ====
-      tabItem(tabName = "home",
+      shinydashboard::tabItem(tabName = "home",
               fluidPage(
                 titlePanel("Introduction of laggedcor"),
                 fluidRow(
@@ -89,7 +89,7 @@ laggedcor_ui <- shinydashboard::dashboardPage(
               )),
       
       ## Data Upload tab ====
-      tabItem(tabName = "upload_data",
+      shinydashboard::tabItem(tabName = "upload_data",
               fluidPage(
                 titlePanel("Data Upload"),
                 fluidRow(
@@ -105,7 +105,7 @@ laggedcor_ui <- shinydashboard::dashboardPage(
               )),
       
       ## Calculate tab ====
-      tabItem(tabName = "calculate",
+      shinydashboard::tabItem(tabName = "calculate",
               fluidPage(
                 titlePanel("Calculation"),
                 fluidRow(
@@ -119,7 +119,7 @@ laggedcor_ui <- shinydashboard::dashboardPage(
                 )
               )),
       ## Result Plots tab ====
-      tabItem(tabName = "result_plot",
+      shinydashboard::tabItem(tabName = "result_plot",
               fluidPage(
                 titlePanel("Result Plots"),
                 fluidRow(
@@ -135,7 +135,7 @@ laggedcor_ui <- shinydashboard::dashboardPage(
               )),
       
       ## Report tab ====
-      tabItem(tabName = "report",
+      shinydashboard::tabItem(tabName = "report",
               fluidPage(
                 titlePanel("Report"),
                 fluidRow(
