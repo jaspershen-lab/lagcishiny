@@ -29,7 +29,7 @@ intro_ui <- shiny::tagList(
   shiny::tags$p(
     shiny::tags$i(class = "fa fa-envelope"),
     " ",
-    shiny::tags$a("shenxt@stanford.edu", href = "mailto:shenxt@stanford.edu")
+    shiny::tags$a("xiaotao.shen@outlook.com", href = "mailto:xiaotao.shen@outlook.com")
   ),
   shiny::tags$p(
     shiny::tags$i(class = "fa-brands fa-square-x-twitter"), " ",
