@@ -77,7 +77,7 @@ laggedcor_ui <- shinydashboard::dashboardPage(
                          # shiny::includeHTML(system.file("app/www/introduction.html",
                          #                                package = "laggedcorAPP")),
                          tags$iframe(
-                           src = "www/introduction.html",
+                           src = "/www/introduction.html",
                            width = "100%",
                            height = "600px",
                            frameborder = 0,
