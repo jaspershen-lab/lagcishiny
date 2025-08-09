@@ -70,19 +70,20 @@ laggedcor_ui <- shinydashboard::dashboardPage(
       ## Home tab ====
       shinydashboard::tabItem(tabName = "home",
               fluidPage(
-                titlePanel("Introduction of laggedcor"),
+                titlePanel(" "),
                 fluidRow(
                   column(12,
                          # shiny::HTML(intro_cleaned_content),
                          # shiny::includeHTML(system.file("app/www/introduction.html",
                          #                                package = "laggedcorAPP")),
-                         tags$iframe(
-                           src = "/www/introduction.html",
-                           width = "100%",
-                           height = "600px",
-                           frameborder = 0,
-                           style = "border: none;"
-                         ),
+                         # tags$iframe(
+                         #   src = "/www/introduction.html",
+                         #   width = "100%",
+                         #   height = "600px",
+                         #   frameborder = 0,
+                         #   style = "border: none;"
+                         # ),
+                         intro_ui,
                          citation_ui("cite")
                   )
                 )
