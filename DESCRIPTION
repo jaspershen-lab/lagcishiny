@@ -31,7 +31,9 @@ Imports:
     stats,
     tinytex,
     tools,
-    utils
+    utils,
+    zip,
+    readr
 Remotes:
   jaspershen-lab/laggedcor
 Depends: 

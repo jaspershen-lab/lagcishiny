@@ -18,7 +18,8 @@ upload_file_ui <- function(id) {
                      accept = c(".csv", ".xlsx", ".xls", ".tsv", ".rda")),
     shiny::fileInput(ns("file2"), "Upload Second File (.csv, .xlsx, .xls, .tsv, .rda)", 
                      accept = c(".csv", ".xlsx", ".xls", ".tsv", ".rda")),
-    actionButton(ns("load_example"), "Click to Use Example Data", icon = icon("flask"))
+    actionButton(ns("load_example"), "Click to Use Example Data", icon = icon("flask")),
+    downloadButton(ns("download_example"), "Download Example Data", icon = icon("download"))
     
   )
 }
@@ -46,6 +47,9 @@ upload_file_ui <- function(id) {
 #' @seealso \code{\link{upload_file_ui}}, \code{\link{read_uploaded_file}}, \code{\link{check_upload_file}}, \code{\link{notify_error_shiny}}
 #'
 #' @importFrom shiny moduleServer reactiveVal observeEvent reactive req
+#' @importFrom zip zipr
+#' @importFrom readr write_csv
+
 #'
 #' @keywords internal
 #' @noRd
@@ -55,6 +59,44 @@ upload_file_server <- function(id) {
     
     # 用 reactiveVal 来存储上传或示例数据
     file_list <- reactiveVal(NULL)
+    
+    # ------- 新增：下载示例数据（heart_data & step_data）-------
+    output$download_example <- shiny::downloadHandler(
+      filename = function() {
+        paste0("laggedcor_example_data_", format(Sys.Date()), ".zip")
+      },
+      content = function(file) {
+        tmpdir <- tempdir()
+        f1 <- file.path(tmpdir, "heart_data.csv")
+        f2 <- file.path(tmpdir, "step_data.csv")
+        
+        # 读取包内数据
+        e <- new.env()
+        tryCatch({
+          data("heart_data", package = "laggedcor", envir = e)
+          data("step_data",  package = "laggedcor", envir = e)
+        }, error = function(err) {
+          notify_error_shiny(paste0("❌ Failed to load example data from {laggedcor}: ", err$message))
+          stop(err)
+        })
+        
+        # 写出为 CSV
+        tryCatch({
+          readr::write_csv(e$heart_data, f1)
+          readr::write_csv(e$step_data,  f2)
+        }, error = function(err) {
+          notify_error_shiny(paste0("❌ Failed to write CSV files: ", err$message))
+          stop(err)
+        })
+        
+        tryCatch({
+          zip::zipr(zipfile = file, files = c(f1, f2))
+        }, error = function(err) {
+          notify_error_shiny(paste0("❌ Failed to create ZIP: ", err$message))
+          stop(err)
+        })
+      }
+    )
     
     # 处理用户上传的文件
     observeEvent({
