@@ -1,5 +1,5 @@
-Package: laggedcorAPP
-Title: Interactive Web Tools of laggedcor R package.
+Package: lagcishiny
+Title: Interactive Web Tools of lagci R package.
 Version: 0.99.0
 Authors@R: 
        person(given = "Shunpeng",
@@ -19,7 +19,7 @@ Imports:
     ggplot2,
     graphics,
     grDevices,
-    laggedcor,
+    lagci,
     methods,
     readr,
     readxl,
@@ -33,9 +33,11 @@ Imports:
     tools,
     utils,
     zip,
-    readr
+    readr,
+    hexbin,
+    svglite
 Remotes:
-  jaspershen-lab/laggedcor
+  jaspershen-lab/lagci
 Depends: 
     R (>= 3.5)
 LazyData: true

@@ -146,7 +146,7 @@ alignment_plot_parameter_server <- function(id, result) {
 #'
 #' @return A `ggplot` object. Returns an empty plot if input is invalid.
 #'
-#' @importFrom laggedcor lagged_scatter_plot
+#' @importFrom lagci lagged_scatter_plot
 #' @importFrom ggplot2 ggplot theme_void
 #'
 #' @keywords internal
@@ -160,7 +160,7 @@ scatter_plot <- function(result, plot_params, which = c("max", "global")) {
     return(ggplot2::ggplot() + ggplot2::theme_void())  # 空图替代报错
   }
   
-  laggedcor::lagged_scatter_plot(
+  lagci::lagged_scatter_plot(
     object = result,
     x_name = plot_params$x_name,
     y_name = plot_params$y_name,
@@ -180,7 +180,7 @@ scatter_plot <- function(result, plot_params, which = c("max", "global")) {
 #'
 #' @return A `ggplot` object. Returns an empty plot if input is incomplete.
 #'
-#' @importFrom laggedcor lagged_alignment_plot
+#' @importFrom lagci lagged_alignment_plot
 #' @importFrom ggplot2 ggplot theme_void
 #'
 #' @keywords internal
@@ -198,7 +198,7 @@ alignment_plot <- function(result, params, which = c("max", "global")) {
     return(ggplot2::ggplot() + ggplot2::theme_void())
   }
   
-  laggedcor::lagged_alignment_plot(
+  lagci::lagged_alignment_plot(
     object = result,
     which = which,
     x_color = params$x_color,

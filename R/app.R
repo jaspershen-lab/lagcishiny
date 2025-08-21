@@ -1,9 +1,9 @@
-#' Launch LaggedCor Shiny App
+#' Launch lagci Shiny App
 #'
 #' @return A Shiny app object.
 #' @export
 #' @importFrom shiny shinyApp
-laggedcor_shiny <- function() {
-  shiny::shinyApp(ui = laggedcor_ui, server = laggedcor_server)
+lagci_shiny <- function() {
+  shiny::shinyApp(ui = lagci_ui, server = lagci_server)
 }
 

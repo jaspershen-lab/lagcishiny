@@ -13,19 +13,19 @@ knitr::opts_chunk$set(
 )
 ```
 
-# laggedcorAPP
+# lagcishiny
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of laggedcorAPP is to ...
+The goal of lagcishiny is to ...
 
 ## Installation
 
-You can install the development version of laggedcorAPP like so:
+You can install the development version of lagcishiny like so:
 
 ``` r
-# FILL THIS IN! HOW CAN PEOPLE INSTALL YOUR DEV PACKAGE?
+devtools::insatll_github("jaspershen-lab/lagcishiny")
 ```
 
 ## Example
@@ -33,7 +33,7 @@ You can install the development version of laggedcorAPP like so:
 This is a basic example which shows you how to solve a common problem:
 
 ```{r example}
-library(laggedcorAPP)
+library(lagcishiny)
 ## basic example code
 ```
 

@@ -1,32 +1,32 @@
-[![Get started with zread](https://img.shields.io/badge/Get%20started%20with%20zread-green)](https://zread.ai/chain-buds/laggedcorAPP) [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/chain-buds/laggedcorAPP) [![](https://www.r-pkg.org/badges/version/laggedcorAPP?color=green)](https://cran.r-project.org/package=laggedcorAPP)
+[![Get started with zread](https://img.shields.io/badge/Get%20started%20with%20zread-green)](https://zread.ai/jaspershen-lab/lagcishiny) [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/jaspershen-lab/lagcishiny) [![](https://www.r-pkg.org/badges/version/lagcishiny?color=green)](https://cran.r-project.org/package=lagcishiny)
 
 ---
-`laggedcorAPP` is a shiny web application for [`laggedcor`](https://github.com/jaspershen-lab/laggedcor) package.
+`lagcishiny` is a shiny web application for [`lagci`](https://github.com/jaspershen-lab/lagci) package.
 
 ## **Installation**
 ---
 
-You can install `laggedcorAPP` from [GitHub](https://github.com/chain-buds/laggedcorAPP).
+You can install `lagcishiny` from [GitHub](https://github.com/jaspershen-lab/lagcishiny).
 
 ``` R
 if(!require(devtools)){
 install.packages("devtools")
 }
-devtools::install_github("chain-buds/laggedcorAPP")
+devtools::install_github("jaspershen-lab/lagcishiny")
 ```
 
 ## **Usage**
 
 ------------------------------------------------------------------------
 
-You can use `laggedcorAPP` by
+You can use `lagcishiny` by
 
 ``` R
-library(laggedcorAPP)
+library(lagcishiny)
 ```
 
 ``` R
-laggedcorAPP::laggedcor_shiny()
+lagcishiny::lagci_shiny()
 ```
 
 It will start a web app in your device.
@@ -35,7 +35,7 @@ It will start a web app in your device.
 ## **Simple tutorial**
 
 ---
-The `laggedcorAPP` web app only contain 5 pages, you can browse and get BibTex
+The `lagcishiny` web app only contain 5 pages, you can browse and get BibTex
  format citation text for `Home` page, and start calculation along with `Data Upload`
  `Calculate` `Result Plots` `Results & Report` pages.
  

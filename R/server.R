@@ -1,6 +1,6 @@
-#' LaggedCor Shiny Server Module
+#' lagci Shiny Server Module
 #'
-#' Main server logic for the LaggedCor Shiny application. This module orchestrates the
+#' Main server logic for the lagci Shiny application. This module orchestrates the
 #' entire lagged correlation analysis pipeline, including file upload, data preview,
 #' time plot rendering, parameter configuration, correlation computation, result summary,
 #' visualization, plot export, and report generation.
@@ -17,7 +17,7 @@
 #'   \item Handles file upload or example data loading via `upload_file_server()`.
 #'   \item Enables preview of uploaded datasets and generates time plots with export capability.
 #'   \item Collects time plot parameters using `time_plot_parameter_server()`.
-#'   \item Computes lagged correlation using `calculate_laggedcor()` when user clicks "Run".
+#'   \item Computes lagged correlation using `calculate_lagci()` when user clicks "Run".
 #'   \item Displays result summary via `display_cor_summary_server()`.
 #'   \item Collects alignment and scatter plot parameters.
 #'   \item Generates and renders: evaluated lag plot, alignment plots (max/global), and scatter plots (max/global).
@@ -33,15 +33,15 @@
 #' @importFrom shiny reactiveVal observe observeEvent req renderPlot renderUI
 #' @importFrom shinyjs click runjs
 #' @importFrom ggplot2 ggplot theme_void
-#' @importFrom laggedcor evaluate_lagged_cor
+#' @importFrom lagci evaluate_lagged_cor
 #'
-#' @seealso \code{\link{calculate_laggedcor}}, \code{\link{export_plot_server}}, \code{\link{report_download_server}}
+#' @seealso \code{\link{calculate_lagci}}, \code{\link{export_plot_server}}, \code{\link{report_download_server}}
 #'
 #' @keywords internal
 #' @noRd
-laggedcor_server <- function(input,output,session){
+lagci_server <- function(input,output,session){
   
-  shiny::addResourcePath("www", system.file("app/www", package = "laggedcorAPP"))
+  shiny::addResourcePath("www", system.file("app/www", package = "lagcishiny"))
   
   # output$introduction_output <- renderUI({
   #   html_lines <- readLines("/app/www/introduction.html", warn = FALSE, encoding = "UTF-8")
@@ -191,7 +191,7 @@ laggedcor_server <- function(input,output,session){
       return(NULL)
     }
     
-    result <- calculate_laggedcor(
+    result <- calculate_lagci(
       df1 = data1(),
       df2 = data2(),
       params = calculation_params
@@ -226,7 +226,7 @@ laggedcor_server <- function(input,output,session){
   
   eva_plot_obj <- reactive({
     req(cor_result())
-    laggedcor::evaluate_lagged_cor(object = cor_result(), plot = TRUE)$plot
+    lagci::evaluate_lagged_cor(object = cor_result(), plot = TRUE)$plot
   })
   
   
@@ -303,7 +303,7 @@ laggedcor_server <- function(input,output,session){
     
     # Evaluated Lagged Correlation Plot
     eva_plot_obj <- reactive({
-      laggedcor::evaluate_lagged_cor(object = cor_result(), plot = TRUE)$plot
+      lagci::evaluate_lagged_cor(object = cor_result(), plot = TRUE)$plot
     })
     
     # Server bindings for export

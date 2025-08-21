@@ -97,7 +97,7 @@ time_plot_ui <- function(id) {
 #'
 #' @importFrom shiny moduleServer renderPlot renderUI req
 #'
-#' @seealso \code{\link{plot_time_series}}, \code{\link{laggedcor::time_plot}}
+#' @seealso \code{\link{plot_time_series}}, \code{\link{lagci::time_plot}}
 #'
 #' @keywords internal
 #' @noRd
@@ -136,7 +136,7 @@ time_plot_server <- function(id, data_reactive, file_name, y_axis_param, plot_pa
 
 #' Render Time-Series Plot with Custom Parameters
 #'
-#' A helper function to generate a time-series plot using the `laggedcor::time_plot()` function.
+#' A helper function to generate a time-series plot using the `lagci::time_plot()` function.
 #'
 #' @param df A data frame containing at least two columns: one named `time`, and another numeric value column.
 #' @param time_col A string specifying the name of the time column (typically "time").
@@ -146,12 +146,12 @@ time_plot_server <- function(id, data_reactive, file_name, y_axis_param, plot_pa
 #'
 #' @return A `ggplot` object representing the time-series plot.
 #'
-#' @seealso \code{\link[laggedcor]{time_plot}}
+#' @seealso \code{\link[lagci]{time_plot}}
 #'
 #' @keywords internal
 #' @noRd
 plot_time_series <- function(df, time_col, value_col, params, y_axis_param) {
-  laggedcor::time_plot(
+  lagci::time_plot(
     x = df[[value_col]],
     time = df[[time_col]],
     color = params$color,

@@ -65,7 +65,7 @@ report_download_server <- function(id,
                                pptx = "slide_template.Rmd")
         
         file.copy(
-          from = system.file("reports", rmd_template, package = "laggedcorAPP"),
+          from = system.file("reports", rmd_template, package = "lagcishiny"),
           to = file.path(temp_dir, "report.Rmd"),
           overwrite = TRUE
         )

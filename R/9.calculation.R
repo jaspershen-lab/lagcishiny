@@ -75,21 +75,21 @@ calculation_parameter_server <- function(id) {
 #' @param df2 A second data frame with the same structure as `df1`.
 #' @param params A list of reactive expressions returned by `calculation_parameter_server()`.
 #'
-#' @return A data frame or list as returned by \code{laggedcor::calculate_lagged_correlation()}.
+#' @return A data frame or list as returned by \code{lagci::calculate_lagged_correlation()}.
 #' If the input data is invalid or empty, `NULL` is returned with an error notification.
 #'
 #' @details
 #' - The function auto-detects which dataset is shorter and aligns accordingly.
 #' - It performs checks to ensure structure validity and non-empty data before calculation.
 #'
-#' @importFrom laggedcor calculate_lagged_correlation
+#' @importFrom lagci calculate_lagged_correlation
 #' @importFrom shiny req
 #'
 #' @seealso \code{\link{calculation_parameter_ui}}, \code{\link{notify_error_shiny}}
 #'
 #' @keywords internal
 #' @noRd
-calculate_laggedcor <- function(df1, df2, params) {
+calculate_lagci <- function(df1, df2, params) {
   stopifnot(is.data.frame(df1), is.data.frame(df2))
   stopifnot(ncol(df1) == 2, ncol(df2) == 2)
   
@@ -108,7 +108,7 @@ calculate_laggedcor <- function(df1, df2, params) {
   time1 <- if (nrow(df1) <= nrow(df2)) df1[[time_col]] else df2[[time_col]]
   time2 <- if (nrow(df1) <= nrow(df2)) df2[[time_col]] else df1[[time_col]]
   
-  laggedcor::calculate_lagged_correlation(
+  lagci::calculate_lagged_correlation(
     x = x,
     y = y,
     time1 = time1,

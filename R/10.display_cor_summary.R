@@ -24,7 +24,7 @@ display_cor_summary_ui <- function(id) {
 #' including extracted metrics and evaluation scores.
 #'
 #' @param id The module ID used to namespace the server logic.
-#' @param result A reactive expression returning the lagged correlation result object (from `calculate_laggedcor()`).
+#' @param result A reactive expression returning the lagged correlation result object (from `calculate_lagci()`).
 #'
 #' @return No return value. This function is called for its side effects—registering a print output in the UI.
 #'
@@ -34,13 +34,13 @@ display_cor_summary_ui <- function(id) {
 #'   \item Maximum correlation and global correlation.
 #'   \item All correlation values and corresponding p-values.
 #'   \item Time shifts (numeric and string).
-#'   \item Evaluation score from \code{laggedcor::evaluate_lagged_cor()}.
+#'   \item Evaluation score from \code{lagci::evaluate_lagged_cor()}.
 #' }
 #'
 #' @importFrom shiny moduleServer renderPrint req
-#' @importFrom laggedcor extract_max_cor extract_global_cor extract_all_cor extract_all_cor_p extract_shift_time evaluate_lagged_cor
+#' @importFrom lagci extract_max_cor extract_global_cor extract_all_cor extract_all_cor_p extract_shift_time evaluate_lagged_cor
 #'
-#' @seealso \code{\link{calculate_laggedcor}}, \code{\link{evaluate_lagged_cor}}
+#' @seealso \code{\link{calculate_lagci}}, \code{\link{evaluate_lagged_cor}}
 #'
 #' @keywords internal
 #' @noRd
@@ -51,13 +51,13 @@ display_cor_summary_server <- function(id, result) {
       
       list(
         summary = result(),
-        max_cor = laggedcor::extract_max_cor(result()),
-        global_cor = laggedcor::extract_global_cor(result()),
-        all_cor = laggedcor::extract_all_cor(result()),
-        all_cor_p = laggedcor::extract_all_cor_p(result()),
-        shift_time_numeric = laggedcor::extract_shift_time(result(), numeric = TRUE),
-        shift_time_no_numeric = laggedcor::extract_shift_time(result(), numeric = FALSE),
-        evaluated_lagged_cor = laggedcor::evaluate_lagged_cor(object = result(), plot = FALSE)$score
+        max_cor = lagci::extract_max_cor(result()),
+        global_cor = lagci::extract_global_cor(result()),
+        all_cor = lagci::extract_all_cor(result()),
+        all_cor_p = lagci::extract_all_cor_p(result()),
+        shift_time_numeric = lagci::extract_shift_time(result(), numeric = TRUE),
+        shift_time_no_numeric = lagci::extract_shift_time(result(), numeric = FALSE),
+        evaluated_lagged_cor = lagci::evaluate_lagged_cor(object = result(), plot = FALSE)$score
       )
     })
   })

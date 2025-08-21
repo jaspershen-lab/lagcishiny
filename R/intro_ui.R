@@ -1,18 +1,18 @@
 intro_ui <- shiny::tagList(
   shiny::tags$h1("Introduction"),
   shiny::tags$p(
-    shiny::tags$code("laggedcor"),
+    shiny::tags$code("lagci"),
     " is an R package designed for calculating lagged correlations between two time-series datasets, ",
     "with a particular focus on wearable and omics data analysis. Developed by Dr. Xiaotao Shen, ",
     "this tool is available on GitHub at ",
-    shiny::tags$a("https://github.com/jaspershen-lab/laggedcor",
-                  href = "https://github.com/jaspershen-lab/laggedcor",
+    shiny::tags$a("https://github.com/jaspershen-lab/lagci",
+                  href = "https://github.com/jaspershen-lab/lagci",
                   target = "_blank"
     ),
     "."
   ),
   shiny::tags$p(
-    shiny::tags$code("laggedcor"),
+    shiny::tags$code("lagci"),
     " is part of the larger tidywearable ecosystem, which provides a comprehensive suite of tools ",
     "for wearable data analysis. This integration ensures compatibility and workflow continuity ",
     "for researchers working with multiple types of temporal health data."

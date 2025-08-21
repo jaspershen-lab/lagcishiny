@@ -18,6 +18,10 @@ upload_file_ui <- function(id) {
                      accept = c(".csv", ".xlsx", ".xls", ".tsv", ".rda")),
     shiny::fileInput(ns("file2"), "Upload Second File (.csv, .xlsx, .xls, .tsv, .rda)", 
                      accept = c(".csv", ".xlsx", ".xls", ".tsv", ".rda")),
+    shiny::tags$p(
+      "This uploaded file should have just two columns (POSIXct and value)",
+      "you can check the format of valid file structure via `Download Example Data` button"
+    ),
     actionButton(ns("load_example"), "Click to Use Example Data", icon = icon("flask")),
     downloadButton(ns("download_example"), "Download Example Data", icon = icon("download"))
     
@@ -41,7 +45,7 @@ upload_file_ui <- function(id) {
 #' @details
 #' - Uploaded files are validated using \code{\link{read_two_files}} and \code{\link{check_upload_file}}.
 #' - Supported file types include `.csv`, `.tsv`, `.xlsx`, `.xls`, and `.rda`.
-#' - Example datasets `heart_data` and `step_data` from the `laggedcor` package can be loaded using the example button.
+#' - Example datasets `heart_data` and `step_data` from the `lagci` package can be loaded using the example button.
 #' - Errors are reported using \code{\link{notify_error_shiny}}.
 #'
 #' @seealso \code{\link{upload_file_ui}}, \code{\link{read_uploaded_file}}, \code{\link{check_upload_file}}, \code{\link{notify_error_shiny}}
@@ -63,7 +67,7 @@ upload_file_server <- function(id) {
     # ------- 新增：下载示例数据（heart_data & step_data）-------
     output$download_example <- shiny::downloadHandler(
       filename = function() {
-        paste0("laggedcor_example_data_", format(Sys.Date()), ".zip")
+        paste0("lagci_example_data_", format(Sys.Date()), ".zip")
       },
       content = function(file) {
         tmpdir <- tempdir()
@@ -73,10 +77,10 @@ upload_file_server <- function(id) {
         # 读取包内数据
         e <- new.env()
         tryCatch({
-          data("heart_data", package = "laggedcor", envir = e)
-          data("step_data",  package = "laggedcor", envir = e)
+          data("heart_data", package = "lagci", envir = e)
+          data("step_data",  package = "lagci", envir = e)
         }, error = function(err) {
-          notify_error_shiny(paste0("❌ Failed to load example data from {laggedcor}: ", err$message))
+          notify_error_shiny(paste0("❌ Failed to load example data from {lagci}: ", err$message))
           stop(err)
         })
         
@@ -120,8 +124,8 @@ upload_file_server <- function(id) {
       
       tryCatch({
         e <- new.env()
-        data("heart_data", package = "laggedcor", envir = e)
-        data("step_data", package = "laggedcor", envir = e)
+        data("heart_data", package = "lagci", envir = e)
+        data("step_data", package = "lagci", envir = e)
         
         df1 <- e$heart_data
         df2 <- e$step_data

@@ -1,11 +1,11 @@
 # intro_cleaned_content <- grep("<(/?(html|head|body))>", 
 #                               readLines(system.file("app/www/introduction.html", 
-#                                                     package = "laggedcorAPP")),
+#                                                     package = "lagcishiny")),
 #                               invert = TRUE, value = TRUE)
 
-#' LaggedCor Shiny UI
+#' lagci Shiny UI
 #'
-#' Defines the user interface layout for the LaggedCor Shiny application using the `shinydashboard` framework.
+#' Defines the user interface layout for the lagci Shiny application using the `shinydashboard` framework.
 #' The UI is organized into five tabs: Home, Data Upload, Calculate, Result Plots, and Results & Report.
 #'
 #' @format A `shinydashboard::dashboardPage` object defining the full app layout.
@@ -31,9 +31,9 @@
 #'   }
 #' }
 #'
-#' @note This UI is designed to be paired with \code{\link{laggedcor_server}}.
+#' @note This UI is designed to be paired with \code{\link{lagci_server}}.
 #'
-#' @seealso \code{\link{laggedcor_server}}, \code{\link{upload_file_ui}}, \code{\link{report_download_ui}}
+#' @seealso \code{\link{lagci_server}}, \code{\link{upload_file_ui}}, \code{\link{report_download_ui}}
 #'
 #' @import shinydashboard
 #' @importFrom shiny fluidPage fluidRow column titlePanel actionButton uiOutput
@@ -42,10 +42,10 @@
 #'
 #' @keywords internal
 #' @noRd
-laggedcor_ui <- shinydashboard::dashboardPage(
+lagci_ui <- shinydashboard::dashboardPage(
   skin = "black",
   
-  shinydashboard::dashboardHeader(title = "laggedcor"),
+  shinydashboard::dashboardHeader(title = "lagci"),
   
   shinydashboard::dashboardSidebar(
     shinydashboard::sidebarMenu(
@@ -75,7 +75,7 @@ laggedcor_ui <- shinydashboard::dashboardPage(
                   column(12,
                          # shiny::HTML(intro_cleaned_content),
                          # shiny::includeHTML(system.file("app/www/introduction.html",
-                         #                                package = "laggedcorAPP")),
+                         #                                package = "lagcishiny")),
                          # tags$iframe(
                          #   src = "/www/introduction.html",
                          #   width = "100%",
@@ -178,7 +178,7 @@ laggedcor_ui <- shinydashboard::dashboardPage(
             " Email"
           ),
           tags$a(
-            href = "https://github.com/jaspershen-lab/laggedcor",
+            href = "https://github.com/jaspershen-lab/lagci",
             target = "_blank",
             class = "footer-link",
             tags$i(class = "fa fa-github footer-icon"),
@@ -186,7 +186,7 @@ laggedcor_ui <- shinydashboard::dashboardPage(
           )
         ),
         tags$img(
-          src = "/www/laggedcor-logo.png",
+          src = "/www/lagci-logo.png",
           class = "footer-logo-right"
         )
       )

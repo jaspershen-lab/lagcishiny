@@ -62,28 +62,28 @@ result
 ## Max Correlation
 
 ```{r}
-laggedcor::extract_max_cor(result)
+lagci::extract_max_cor(result)
 ```
 
 ## Global Correlation
 
 ```{r}
-laggedcor::extract_global_cor(result)
+lagci::extract_global_cor(result)
 ```
 
 ## Shift Times
 
 ```{r}
 list(
-  numeric = laggedcor::extract_shift_time(result, numeric = TRUE),
-  annotated = laggedcor::extract_shift_time(result, numeric = FALSE)
+  numeric = lagci::extract_shift_time(result, numeric = TRUE),
+  annotated = lagci::extract_shift_time(result, numeric = FALSE)
 )
 ```
 
 ## Evaluation Score
 
 ```{r}
-laggedcor::evaluate_lagged_cor(result, plot = FALSE)$score
+lagci::evaluate_lagged_cor(result, plot = FALSE)$score
 ```
 
 ---
