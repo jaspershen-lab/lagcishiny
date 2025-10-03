@@ -15,7 +15,7 @@
   
   packageStartupMessage("Welcome to lagcishiny 🎉 \n",
                         "You can use lagci web application via \n",
-                        "lagci::lagci_shiny() \n",
+                        "lagcishiny::lagci_shiny() \n",
                         "If you want to export PDF report, please run \n",
                         "tinytex::install_tinytex()\n",
                         "or install locally\n",
