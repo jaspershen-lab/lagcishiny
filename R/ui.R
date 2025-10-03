@@ -186,7 +186,7 @@ lagci_ui <- shinydashboard::dashboardPage(
           )
         ),
         tags$img(
-          src = "/www/lagci-logo.png",
+          src = "/www/lagci_logo.jpg",
           class = "footer-logo-right"
         )
       )
